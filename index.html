@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Little Autumn Space</title>
+  <link rel="stylesheet" href="https://use.typekit.net/vnw5jnx.css">
+  <style>
+    /* ─── Design tokens ─────────────────────────────────────────────────── */
+    :root {
+      --bg:          #F7F5F0;
+      --bg-dark:     #111110;
+      --text:        #1C1B19;
+      --muted:       #8A8680;
+      --ph:          #E8E4DC;
+      --border:      rgba(28, 27, 25, 0.10);
+
+      --serif: 'norman-variable', Georgia, serif;
+      --sans:  'gotham', 'Helvetica Neue', sans-serif;
+      --body:  'acumin-pro', 'Helvetica Neue', sans-serif;
+      --jp:    'noto-sans-cjk-jp', sans-serif;
+
+      --s1: 0.5rem; --s2: 1rem;  --s3: 1.5rem;
+      --s4: 2rem;   --s5: 3rem;  --s6: 5rem;  --s7: 8rem;
+
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --dur:      0.7s;
+      --dur-fast: 0.3s;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .ph { width: 100%; height: 100%; background: var(--ph); display: block; }
+
+    /* ─── View switching ─────────────────────────────────────────────────── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Section header & filter animate in when view becomes active */
+    .view.active .section-header  { animation: slideIn var(--dur) var(--ease) both; }
+    .view.active .filter-bar       { animation: slideIn var(--dur) var(--ease) 0.08s both; }
+    /* Grid items stagger via --d custom property */
+    .view.active .work-item        { animation: slideIn 0.8s var(--ease) both; animation-delay: var(--d, 0s); }
+    .view.active .gallery-item     { animation: slideIn 0.8s var(--ease) both; animation-delay: var(--d, 0s); }
+
+    /* ─── Header ─────────────────────────────────────────────────────────── */
+    #site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.25rem var(--s4);
+    }
+    #site-title {
+      font-family: var(--sans);
+      font-size: 0.625rem;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease) 0.8s;
+    }
+    body.ready #site-title { opacity: 1; }
+
+    /* ─── Bottom Nav ─────────────────────────────────────────────────────── */
+    #site-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.25rem var(--s4);
+      display: flex;
+      align-items: center;
+      gap: var(--s4);
+      background: linear-gradient(to top, var(--bg) 60%, transparent);
+      opacity: 0;
+      transition: opacity var(--dur) var(--ease) 1s;
+    }
+    body.ready #site-nav { opacity: 1; }
+    #site-nav a {
+      font-family: var(--sans);
+      font-size: 0.625rem;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text);
+      transition: opacity var(--dur-fast);
+      position: relative;
+      cursor: pointer;
+    }
+    #site-nav a.current { opacity: 0.35; pointer-events: none; }
+    #site-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 1px;
+      background: var(--text);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--dur-fast) var(--ease-out);
+    }
+    #site-nav a:not(.current):hover::after { transform: scaleX(1); }
+    #site-nav .nav-contact { margin-left: auto; }
+
+    /* ─── Hero ───────────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem var(--s4) 5rem;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(5rem, 14vw, 14rem);
+      font-weight: 700;
+      line-height: 0.84;
+      letter-spacing: -0.025em;
+    }
+    .hero-title span {
+      display: block;
+      transform: translateX(40px);
+      opacity: 0;
+      transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    }
+    body.ready .hero-title span:nth-child(1) { transform: translateX(0); opacity: 1; transition-delay: 0.0s; }
+    body.ready .hero-title span:nth-child(2) { transform: translateX(0); opacity: 1; transition-delay: 0.1s; }
+    body.ready .hero-title span:nth-child(3) { transform: translateX(0); opacity: 1; transition-delay: 0.2s; }
+
+    /* ─── Section Header ─────────────────────────────────────────────────── */
+    .section-header {
+      padding: calc(var(--s6) + 3rem) var(--s4) var(--s4);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .page-title {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 0.9;
+    }
+    .page-count {
+      font-family: var(--body);
+      font-size: 0.6875rem;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    /* ─── Filter Bar ─────────────────────────────────────────────────────── */
+    .filter-bar {
+      padding: var(--s2) var(--s4) var(--s3);
+      display: flex; gap: var(--s1); flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: none; border: 1px solid var(--border);
+      padding: 0.3em 0.9em;
+      font-family: var(--sans); font-size: 0.4375rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
+    }
+    .filter-btn:hover { color: var(--text); border-color: rgba(28,27,25,0.3); }
+    .filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+    /* ─── Works Grid (Design) ────────────────────────────────────────────── */
+    #design-works { padding: var(--s5) var(--s4) var(--s7); }
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .work-item {
+      position: relative; cursor: pointer;
+      overflow: hidden; background: var(--bg);
+    }
+    .work-thumb {
+      aspect-ratio: 4/3;
+      overflow: hidden; position: relative;
+    }
+    .work-thumb .ph { transition: transform 1s var(--ease); }
+    .work-item:hover .work-thumb .ph { transform: scale(1.05); }
+    .work-thumb-overlay {
+      position: absolute; inset: 0;
+      background: rgba(28, 27, 25, 0.0);
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: flex-end;
+      padding: var(--s3);
+      transition: background var(--dur-fast);
+    }
+    .work-item:hover .work-thumb-overlay { background: rgba(28, 27, 25, 0.45); }
+    .work-hover-label {
+      font-family: var(--body); font-size: 0.8125rem;
+      color: #F7F5F0; letter-spacing: 0.02em;
+      transform: translateY(6px); opacity: 0;
+      transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+    }
+    .work-item:hover .work-hover-label { transform: translateY(0); opacity: 1; }
+    .work-meta { padding: var(--s2); border-bottom: 1px solid var(--border); }
+    .work-num {
+      font-family: var(--body); font-size: 0.5rem;
+      letter-spacing: 0.14em; color: var(--muted);
+      margin-bottom: 0.25rem; font-variant-numeric: tabular-nums;
+    }
+    .work-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; }
+    .work-tags { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .work-tag {
+      font-family: var(--sans); font-size: 0.4375rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border); padding: 0.2em 0.6em;
+    }
+
+    /* ─── Gallery Grid (Photography) ─────────────────────────────────────── */
+    #photo-works { padding: var(--s5) var(--s4) var(--s7); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .gallery-item {
+      position: relative; cursor: pointer;
+      overflow: hidden; background: var(--bg);
+    }
+    .gallery-thumb {
+      aspect-ratio: 3/2;
+      overflow: hidden; position: relative;
+    }
+    .gallery-thumb .ph { transition: transform 1s var(--ease); }
+    .gallery-item:hover .gallery-thumb .ph { transform: scale(1.05); }
+    .gallery-hover-overlay {
+      position: absolute; inset: 0;
+      background: rgba(28, 27, 25, 0.0);
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: flex-end;
+      padding: var(--s3);
+      transition: background var(--dur-fast);
+    }
+    .gallery-item:hover .gallery-hover-overlay { background: rgba(28, 27, 25, 0.45); }
+    .gallery-hover-label {
+      font-family: var(--body); font-size: 0.8125rem;
+      color: #F7F5F0; letter-spacing: 0.02em;
+      transform: translateY(6px); opacity: 0;
+      transition: transform var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+    }
+    .gallery-item:hover .gallery-hover-label { transform: translateY(0); opacity: 1; }
+    .gallery-meta { padding: var(--s2); border-bottom: 1px solid var(--border); }
+    .gallery-num {
+      font-family: var(--body); font-size: 0.5rem;
+      letter-spacing: 0.14em; color: var(--muted);
+      margin-bottom: 0.25rem; font-variant-numeric: tabular-nums;
+    }
+    .gallery-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; }
+    .gallery-tags { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .gallery-tag {
+      font-family: var(--sans); font-size: 0.4375rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border); padding: 0.2em 0.6em;
+    }
+
+    /* ─── About Overlay ───────────────────────────────────────────────────── */
+    #about-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      pointer-events: none; opacity: 0;
+      transition: opacity var(--dur-fast);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #about-overlay.open { pointer-events: all; opacity: 1; }
+    .about-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(28, 27, 25, 0.75);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .about-panel {
+      position: relative; z-index: 1;
+      width: min(520px, calc(100vw - 2rem));
+      max-height: 85svh;
+      background: var(--bg);
+      padding: var(--s6) var(--s5) var(--s5);
+      overflow-y: auto;
+      transform: translateX(40px); opacity: 0;
+      transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    }
+    #about-overlay.open .about-panel { transform: translateX(0); opacity: 1; }
+    .about-close {
+      position: absolute; top: var(--s3); right: var(--s4);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--sans); font-size: 0.5rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); padding: var(--s1);
+      transition: color var(--dur-fast);
+    }
+    .about-close:hover { color: var(--text); }
+    .bio-lang-toggle { display: flex; gap: 1.5rem; margin-bottom: var(--s5); }
+    .bio-lang-toggle button {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--sans); font-size: 0.5rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); padding: 0;
+      transition: color var(--dur-fast);
+    }
+    .bio-lang-toggle button.active { color: var(--text); }
+    .bio-content { display: none; }
+    .bio-content.active { display: block; }
+    .bio-name {
+      font-family: var(--serif);
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;
+      margin-bottom: var(--s5);
+    }
+    .bio-section { margin-bottom: var(--s4); }
+    .bio-section-label {
+      font-family: var(--sans); font-size: 0.65rem;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: var(--s2);
+      padding-bottom: var(--s1); border-bottom: 1px solid var(--border);
+    }
+    .bio-timeline { list-style: none; }
+    .bio-timeline li {
+      display: grid; grid-template-columns: 2.75rem 1fr;
+      gap: var(--s2); padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border); line-height: 1.55;
+    }
+    .bio-timeline .year {
+      font-family: var(--body); font-size: 0.6875rem;
+      color: var(--muted); padding-top: 0.05em; font-variant-numeric: tabular-nums;
+    }
+    .bio-timeline .desc { font-family: var(--jp); font-size: 0.8125rem; }
+    .bio-timeline .desc.en { font-family: var(--body); }
+
+    /* ─── Work Overlay (Design) ───────────────────────────────────────────── */
+    #work-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      pointer-events: none; opacity: 0;
+      transition: opacity var(--dur-fast);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #work-overlay.open { pointer-events: all; opacity: 1; }
+    #work-overlay .overlay-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(28, 27, 25, 0.5);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .work-overlay-panel {
+      position: relative; z-index: 1;
+      width: min(860px, calc(100vw - 2rem));
+      height: min(580px, 85svh);
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      transform: translateX(40px); opacity: 0;
+      transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+      overflow: visible;
+    }
+    #work-overlay.open .work-overlay-panel { transform: translateX(0); opacity: 1; }
+    .work-overlay-close {
+      position: absolute; top: var(--s2); right: var(--s3);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); padding: var(--s1);
+      z-index: 10; transition: color var(--dur-fast);
+    }
+    .work-overlay-close:hover { color: var(--text); }
+    .work-overlay-main {
+      flex: 1 1 0; min-height: 0;
+      position: relative; background: var(--ph); overflow: hidden;
+    }
+    .work-overlay-main .ph { width: 100%; height: 100%; display: block; }
+    .work-overlay-thumbs-wrap { flex: 0 0 auto; position: relative; background: rgba(28, 27, 25, 0.06); }
+    .work-overlay-thumbs {
+      display: flex; gap: 3px; padding: 6px 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .work-overlay-thumbs::-webkit-scrollbar { display: none; }
+    .work-overlay-thumb {
+      flex: 0 0 auto; width: 56px; height: 42px;
+      cursor: pointer; overflow: hidden;
+      opacity: 0.32; transition: opacity var(--dur-fast);
+    }
+    .work-overlay-thumb.active { opacity: 1; outline: 1px solid rgba(28,27,25,0.25); }
+    .work-overlay-thumb:hover:not(.active) { opacity: 0.6; }
+    .work-overlay-thumb .ph { width: 100%; height: 100%; display: block; }
+    .work-overlay-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px;
+      background: rgba(28, 27, 25, 0.65); border: none;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: rgba(247, 245, 240, 0.9);
+      transition: background var(--dur-fast); z-index: 10;
+    }
+    .work-overlay-nav:hover { background: rgba(28, 27, 25, 0.88); }
+    .work-overlay-nav:disabled { opacity: 0.25; cursor: default; }
+    #wo-prev { left: -54px; }
+    #wo-next { right: -54px; }
+    .work-overlay-caption {
+      flex: 0 0 auto; display: flex; gap: var(--s4);
+      padding: var(--s2) var(--s3); border-top: 1px solid var(--border);
+    }
+    .work-overlay-caption .caption-meta { flex: 0 0 180px; }
+    .work-overlay-num {
+      font-family: var(--body); font-size: 0.5rem;
+      letter-spacing: 0.14em; color: var(--muted);
+      margin-bottom: 0.15rem; font-variant-numeric: tabular-nums;
+    }
+    .work-overlay-title {
+      font-family: var(--serif);
+      font-size: clamp(0.875rem, 1.8vw, 1.2rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+    }
+    .work-overlay-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
+    .work-overlay-tag {
+      font-family: var(--sans); font-size: 0.4375rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border); padding: 0.2em 0.6em;
+    }
+
+    /* ─── Photo Overlay ───────────────────────────────────────────────────── */
+    #photo-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      pointer-events: none; opacity: 0;
+      transition: opacity var(--dur-fast);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #photo-overlay.open { pointer-events: all; opacity: 1; }
+    #photo-overlay .overlay-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(28, 27, 25, 0.5);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .photo-overlay-panel {
+      position: relative; z-index: 1;
+      width: min(640px, calc(100vw - 2rem));
+      max-height: 90svh;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      transform: translateX(40px); opacity: 0;
+      transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+      overflow: visible;
+    }
+    #photo-overlay.open .photo-overlay-panel { transform: translateX(0); opacity: 1; }
+    .photo-overlay-close {
+      position: absolute; top: var(--s2); right: var(--s3);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); padding: var(--s1);
+      z-index: 10; transition: color var(--dur-fast);
+    }
+    .photo-overlay-close:hover { color: var(--text); }
+    .photo-overlay-main {
+      width: 100%; flex: 0 0 55svh;
+      height: 55svh; overflow: hidden;
+      position: relative; display: flex; align-items: center; justify-content: center;
+      background: #605B54;
+    }
+    .photo-overlay-main .ph { width: 100%; aspect-ratio: 4/3; display: block; background: var(--ph); }
+    .photo-overlay-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-overlay-thumbs-wrap { flex: 0 0 auto; position: relative; background: rgba(28, 27, 25, 0.06); }
+    .photo-overlay-thumbs {
+      display: flex; gap: 3px; padding: 6px 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .photo-overlay-thumbs::-webkit-scrollbar { display: none; }
+    .photo-overlay-thumb {
+      flex: 0 0 auto; width: 63px; height: 42px;
+      cursor: pointer; overflow: hidden;
+      opacity: 0.32; transition: opacity var(--dur-fast);
+    }
+    .photo-overlay-thumb.active { opacity: 1; outline: 1px solid rgba(28,27,25,0.25); }
+    .photo-overlay-thumb:hover:not(.active) { opacity: 0.6; }
+    .photo-overlay-thumb .ph { width: 100%; height: 100%; display: block; }
+    .photo-overlay-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px;
+      background: rgba(28, 27, 25, 0.65); border: none;
+      border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: rgba(247, 245, 240, 0.9);
+      transition: background var(--dur-fast); z-index: 10;
+    }
+    .photo-overlay-nav:hover { background: rgba(28, 27, 25, 0.88); }
+    .photo-overlay-nav:disabled { opacity: 0.25; cursor: default; }
+    #po-prev { left: -54px; }
+    #po-next { right: -54px; }
+    .photo-overlay-caption {
+      flex: 0 0 auto; display: flex; gap: var(--s4);
+      padding: var(--s2) var(--s3); border-top: 1px solid var(--border);
+    }
+    .photo-overlay-caption .caption-meta { flex: 0 0 160px; }
+    .caption-body a {
+      color: var(--text); text-underline-offset: 3px;
+      font-size: 0.75rem; letter-spacing: 0.04em;
+      opacity: 0.65; transition: opacity var(--dur-fast);
+    }
+    .caption-body a:hover { opacity: 1; }
+    .caption-body {
+      flex: 1 1 0; min-width: 0;
+      border-left: 1px solid var(--border); padding-left: var(--s4);
+      font-family: var(--body); font-size: 0.75rem;
+      line-height: 1.75; color: var(--muted);
+      display: flex; align-items: flex-start;
+    }
+    .photo-overlay-num {
+      font-family: var(--body); font-size: 0.5rem;
+      letter-spacing: 0.14em; color: var(--muted);
+      margin-bottom: 0.15rem; font-variant-numeric: tabular-nums;
+    }
+    .photo-overlay-title {
+      font-family: var(--serif);
+      font-size: clamp(0.875rem, 1.8vw, 1.2rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+    }
+    .photo-overlay-cat {
+      font-family: var(--sans); font-size: 0.5rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ─── Contact Overlay ─────────────────────────────────────────────────── */
+    #contact-overlay {
+      position: fixed; inset: 0; z-index: 210;
+      pointer-events: none; opacity: 0;
+      transition: opacity var(--dur-fast);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #contact-overlay.open { pointer-events: all; opacity: 1; }
+    .contact-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(28, 27, 25, 0.45);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .contact-panel {
+      position: relative; z-index: 1;
+      width: min(520px, calc(100vw - 2rem));
+      background: var(--bg); padding: var(--s6) var(--s5) var(--s5);
+      transform: translateX(40px); opacity: 0;
+      transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    }
+    #contact-overlay.open .contact-panel { transform: translateX(0); opacity: 1; }
+    .contact-close {
+      position: absolute; top: var(--s3); right: var(--s4);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); padding: var(--s1);
+      transition: color var(--dur-fast);
+    }
+    .contact-close:hover { color: var(--text); }
+    .contact-heading {
+      font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700; letter-spacing: -0.025em; line-height: 0.9;
+      margin-bottom: var(--s5);
+    }
+    .contact-form { display: flex; flex-direction: column; gap: var(--s4); }
+    .contact-field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .contact-label { font-family: var(--sans); font-size: 0.4375rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .contact-input, .contact-textarea {
+      background: none; border: none; border-bottom: 1px solid var(--border);
+      padding: 0.5rem 0; font-family: var(--body); font-size: 0.875rem;
+      color: var(--text); width: 100%; outline: none;
+      transition: border-color var(--dur-fast); -webkit-font-smoothing: antialiased;
+    }
+    .contact-input:focus, .contact-textarea:focus { border-color: var(--text); }
+    .contact-textarea { resize: none; height: 6rem; line-height: 1.6; }
+    .contact-input::placeholder, .contact-textarea::placeholder { color: var(--muted); opacity: 0.5; }
+    .contact-submit {
+      align-self: flex-start; margin-top: var(--s2);
+      background: none; border: 1px solid var(--border); padding: 0.65rem 1.5rem;
+      font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast);
+    }
+    .contact-submit:hover { background: var(--text); color: var(--bg); }
+
+    /* ─── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .works-grid, .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      #site-nav { gap: var(--s3); }
+      .works-grid, .gallery-grid { grid-template-columns: 1fr; }
+      #design-works, #photo-works { padding: var(--s4) var(--s3) var(--s6); }
+      .section-header { padding-top: calc(var(--s5) + 3rem); }
+      .work-overlay-panel { width: calc(100vw - 1rem); height: 85svh; }
+      .photo-overlay-panel { width: calc(100vw - 1rem); }
+      .work-overlay-caption, .photo-overlay-caption { flex-direction: column; gap: var(--s2); }
+      .caption-body { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: var(--s2); }
+      .about-panel { padding: var(--s5) var(--s4); }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="site-header">
+    <a href="#" id="site-title" data-view="hero">Little Autumn Space</a>
+  </header>
+
+  <main>
+
+    <!-- ─── View: Hero ────────────────────────────────────────────────────── -->
+    <div id="view-hero" class="view active">
+      <section id="hero">
+        <h1 class="hero-title" aria-label="Little Autumn Space">
+          <span>Little</span>
+          <span>Autumn</span>
+          <span>Space</span>
+        </h1>
+      </section>
+    </div>
+
+    <!-- ─── View: Design / Graphics ───────────────────────────────────────── -->
+    <div id="view-design" class="view">
+      <section id="design">
+        <div class="section-header">
+          <h2 class="page-title">Graphics</h2>
+          <span class="page-count">6 works</span>
+        </div>
+        <div class="filter-bar" id="design-filter">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Branding">Branding</button>
+          <button class="filter-btn" data-filter="Corporate">Corporate</button>
+          <button class="filter-btn" data-filter="Print">Print</button>
+        </div>
+        <div id="design-works">
+          <div class="works-grid">
+
+            <article class="work-item" style="--d:0.00s" data-num="01" data-title="Project Title 01" data-tags="Print">
+              <div class="work-thumb">
+                <!-- ★ ここに写真を差し込む -->
+                <span class="ph"></span>
+                <div class="work-thumb-overlay">
+                  <span class="work-hover-label">view →</span>
+                </div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">01</p>
+                <p class="work-title">Project Title 01</p>
+                <div class="work-tags">
+                  <span class="work-tag">Print</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.06s" data-num="02" data-title="Project Title 02" data-tags="Branding">
+              <div class="work-thumb">
+                <!-- ★ ここに写真を差し込む -->
+                <span class="ph"></span>
+                <div class="work-thumb-overlay">
+                  <span class="work-hover-label">view →</span>
+                </div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">02</p>
+                <p class="work-title">Project Title 02</p>
+                <div class="work-tags">
+                  <span class="work-tag">Branding</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.12s" data-num="03" data-title="Project Title 03" data-tags="Print">
+              <div class="work-thumb">
+                <!-- ★ ここに写真を差し込む -->
+                <span class="ph"></span>
+                <div class="work-thumb-overlay">
+                  <span class="work-hover-label">view →</span>
+                </div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">03</p>
+                <p class="work-title">Project Title 03</p>
+                <div class="work-tags">
+                  <span class="work-tag">Print</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.18s" data-num="04" data-title="Project Title 04" data-tags="Corporate">
+              <div class="work-thumb">
+                <!-- ★ ここに写真を差し込む -->
+                <span class="ph"></span>
+                <div class="work-thumb-overlay">
+                  <span class="work-hover-label">view →</span>
+                </div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">04</p>
+                <p class="work-title">Project Title 04</p>
+                <div class="work-tags">
+                  <span class="work-tag">Corporate</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.24s" data-num="05" data-title="Project Title 05" data-tags="Print">
+              <div class="work-thumb">
+                <!-- ★ ここに写真を差し込む -->
+                <span class="ph"></span>
+                <div class="work-thumb-overlay">
+                  <span class="work-hover-label">view →</span>
+                </div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">05</p>
+                <p class="work-title">Project Title 05</p>
+                <div class="work-tags">
+                  <span class="work-tag">Print</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.30s" data-num="06" data-title="Project Title 06" data-tags="Print">
+              <div class="work-thumb">
+                <!-- ★ ここに写真を差し込む -->
+                <span class="ph"></span>
+                <div class="work-thumb-overlay">
+                  <span class="work-hover-label">view →</span>
+                </div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">06</p>
+                <p class="work-title">Project Title 06</p>
+                <div class="work-tags">
+                  <span class="work-tag">Print</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ─── View: Photography ──────────────────────────────────────────────── -->
+    <div id="view-photography" class="view">
+      <section id="photography">
+        <div class="section-header">
+          <h2 class="page-title">Photography</h2>
+          <span class="page-count">21 works</span>
+        </div>
+        <div class="filter-bar" id="photo-filter">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Corporate">Corporate</button>
+          <button class="filter-btn" data-filter="Space">Space</button>
+          <button class="filter-btn" data-filter="Portrait">Portrait</button>
+        </div>
+        <div id="photo-works">
+          <div class="gallery-grid">
+
+            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="Yokohama Timberwharf" data-cat="Photography" data-tags="Space,Corporate" data-count="7" data-caption="横浜・みなとみらいに位置する商業複合施設の竣工撮影を担当。木材をふんだんに用いた空間の、光と素材が織りなす豊かな表情を記録した。<br><a href='https://yokohama-timberwharf.com' target='_blank' rel='noopener'>yokohama-timberwharf.com →</a>" data-images="link/YTW/YTW_01.jpg|link/YTW/YTW_02.jpg|link/YTW/YTW_03.jpg|link/YTW/YTW_04.jpg|link/YTW/YTW_05.jpg|link/YTW/YTW_06.jpg|link/YTW/YTW_07.jpg">
+              <div class="gallery-thumb"><img src="link/YTW/YTW_01.jpg" alt="Yokohama Timberwharf" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">01</p><p class="gallery-title">Yokohama Timberwharf</p><div class="gallery-tags"><span class="gallery-tag">Space</span><span class="gallery-tag">Corporate</span></div></div>
+            </article>
+            <article class="gallery-item" style="--d:0.05s" data-num="02" data-title="RIZAP" data-cat="Photography" data-tags="Corporate,Space" data-count="23" data-caption="RIZAPのトレーニング施設撮影を担当。黒を基調とした内装に差し込む光が、緊張感と集中を生む空間の空気感を記録した。" data-images="link/rizap/DSC00037_K.jpg|link/rizap/DSC00041_K_2.jpg|link/rizap/DSC00055_HDR_K.jpg|link/rizap/DSC00058_HDR_K.jpg|link/rizap/DSC00061_HDR_K.jpg|link/rizap/DSC00090_HDR_K.jpg|link/rizap/DSC00100_HDR_K.jpg|link/rizap/DSC00104_HDR_K.jpg|link/rizap/DSC00120_HDR_K.jpg|link/rizap/DSC00140_HDR_K.jpg|link/rizap/DSC00150_HDR_K_3.jpg|link/rizap/DSC00162_HDR_K_3.jpg|link/rizap/DSC00164_HDR_K_3.jpg|link/rizap/DSC00173_HDR_K_3.jpg|link/rizap/DSC00185_HDR_K.jpg|link/rizap/DSC00213_HDR_K.jpg|link/rizap/DSC00222_HDR_K_3.jpg|link/rizap/DSC00243_HDR_K.jpg|link/rizap/DSC00255_HDR_K.jpg|link/rizap/DSC00259_K.jpg|link/rizap/DSC00267_K_2.jpg|link/rizap/DSC00277_K_2.jpg|link/rizap/DSC00302_K.jpg">
+              <div class="gallery-thumb"><img src="link/rizap/DSC00037_K.jpg" alt="RIZAP" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">RIZAP</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Space</span></div></div>
+            </article>
+            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="R-01 Series" data-cat="Photography" data-tags="Branding,Product" data-count="10" data-caption="「DAFT about DRAFT」の新プロダクト撮影とアートディレクションを一貫して担当。光と素材、余白で語るビジュアルを制作した。<br><a href='https://daft-about-draft.com/en' target='_blank' rel='noopener'>daft-about-draft.com →</a>" data-images="link/rug/rug-01.jpg|link/rug/rug-02.jpg|link/rug/rug-03.jpg|link/rug/rug-04.jpg|link/rug/rug-05.jpg|link/rug/rug-06.jpg|link/rug/rug-07.jpg|link/rug/rug-08.jpg|link/rug/rug-09.jpg|link/rug/rug-10.jpg">
+              <div class="gallery-thumb"><img src="link/rug/rug-02.jpg" alt="R-01 Series" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">01</p><p class="gallery-title">R-01 Series</p><div class="gallery-tags"><span class="gallery-tag">Branding</span><span class="gallery-tag">Product</span></div></div>
+            </article>
+            <article class="gallery-item" style="--d:0.05s" data-num="02" data-title="Staff Portrait" data-cat="Photography" data-tags="Corporate,Portrait" data-count="17" data-caption="DRAFT inc.の社員を6年間で200名超を撮影。(一部抜粋)<br>プロフィール写真・コンペ資料などに活用される。" data-images="link/portrait/portrait_01.jpg|link/portrait/portrait_02.jpg|link/portrait/portrait_03.jpg|link/portrait/portrait_04.jpg|link/portrait/portrait_05.jpg|link/portrait/portrait_06.jpg|link/portrait/portrait_07.jpg|link/portrait/portrait_08.jpg|link/portrait/portrait_09.jpg|link/portrait/portrait_10.jpg|link/portrait/portrait_11.jpg|link/portrait/portrait_12.jpg|link/portrait/portrait_13.jpg|link/portrait/portrait_14.jpg|link/portrait/portrait_15.jpg|link/portrait/portrait_16.jpg|link/portrait/portrait_17.jpg">
+              <div class="gallery-thumb"><img src="link/portrait/portrait_01.jpg" alt="Staff Portrait" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">Staff Portrait</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Portrait</span></div></div>
+            </article>
+
+            <article class="gallery-item" style="--d:0.06s" data-num="02" data-title="Photo Title 02" data-cat="Photography" data-tags="Portrait" data-count="5">
+              <div class="gallery-thumb"><span class="ph"></span><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">Photo Title 02</p><div class="gallery-tags"><span class="gallery-tag">Portrait</span></div></div>
+            </article>
+
+            <article class="gallery-item" style="--d:0.12s" data-num="03" data-title="Photo Title 03" data-cat="Photography" data-tags="Space" data-count="5">
+              <div class="gallery-thumb"><span class="ph"></span><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">03</p><p class="gallery-title">Photo Title 03</p><div class="gallery-tags"><span class="gallery-tag">Space</span></div></div>
+            </article>
+
+            <article class="gallery-item" style="--d:0.00s" data-num="04" data-title="Photo Title 04" data-cat="Photography" data-tags="Space" data-count="5">
+              <div class="gallery-thumb"><span class="ph"></span><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">04</p><p class="gallery-title">Photo Title 04</p><div class="gallery-tags"><span class="gallery-tag">Space</span></div></div>
+            </article>
+
+
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <nav id="site-nav" aria-label="Main navigation">
+    <a href="#" id="nav-about">About</a>
+    <a href="#" id="nav-design">Graphics</a>
+    <a href="#" id="nav-photography">Photography</a>
+    <a href="#" class="nav-contact" id="nav-contact">Contact</a>
+  </nav>
+
+  <!-- ─── About Overlay ──────────────────────────────────────────────────── -->
+  <div id="about-overlay" role="dialog" aria-modal="true" aria-label="Biography">
+    <div class="about-backdrop" id="about-backdrop"></div>
+    <div class="about-panel">
+      <button class="about-close" id="about-close" aria-label="Close">Close ✕</button>
+      <div class="bio-lang-toggle" role="group" aria-label="Language">
+        <button class="active" data-lang="jp">日本語</button>
+        <button data-lang="en">English</button>
+      </div>
+      <div class="bio-content active" data-content="jp">
+        <p class="bio-name">&#x9AD9;橋秋智</p>
+        <div class="bio-section">
+          <p class="bio-section-label">経歴</p>
+          <ul class="bio-timeline">
+            <li><span class="year">2018</span><span class="desc">武蔵野美術大学 卒業</span></li>
+            <li><span class="year">2020</span><span class="desc">DRAFT Inc. 入社<br>Corporate Marketing & Relations 配属</span></li>
+            <li><span class="year">2023</span><span class="desc">Communication Design Div. 異動</span></li>
+            <li><span class="year">2024</span><span class="desc">Photo Unit. 発足</span></li>
+          </ul>
+        </div>
+        <div class="bio-section">
+          <p class="bio-section-label">受賞・展示</p>
+          <ul class="bio-timeline">
+            <li><span class="year">2018</span><span class="desc">武蔵野美術大学 造形学部卒業制作・大学院修了制作展 2017</span></li>
+            <li><span class="year">2018</span><span class="desc">武蔵野美術大学 造形学部卒業制作・大学院修了制作<br>優秀作品展 2017</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bio-content" data-content="en">
+        <p class="bio-name">Takahashi Akitomo</p>
+        <div class="bio-section">
+          <p class="bio-section-label">Career</p>
+          <ul class="bio-timeline">
+            <li><span class="year">2018</span><span class="desc en">Graduated from Musashino Art University</span></li>
+            <li><span class="year">2020</span><span class="desc en">Joined DRAFT Inc.<br>Assigned to Corporate Marketing & Relations</span></li>
+            <li><span class="year">2023</span><span class="desc en">Transferred to Communication Design Division</span></li>
+            <li><span class="year">2024</span><span class="desc en">Established Photo Unit</span></li>
+          </ul>
+        </div>
+        <div class="bio-section">
+          <p class="bio-section-label">Awards & Exhibitions</p>
+          <ul class="bio-timeline">
+            <li><span class="year">2018</span><span class="desc en">Musashino Art University Degree Show 2017</span></li>
+            <li><span class="year">2018</span><span class="desc en">Musashino Art University Degree Show — Excellence Award 2017</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Work Overlay ───────────────────────────────────────────────────── -->
+  <div id="work-overlay" role="dialog" aria-modal="true" aria-label="Work detail">
+    <div class="overlay-backdrop" id="work-backdrop"></div>
+    <div class="work-overlay-panel">
+      <button class="work-overlay-close" id="work-overlay-close" aria-label="Close">Close ✕</button>
+      <div class="work-overlay-main" id="wo-main"><span class="ph"></span></div>
+      <div class="work-overlay-thumbs-wrap">
+        <button class="work-overlay-nav" id="wo-prev" aria-label="Previous">←</button>
+        <div class="work-overlay-thumbs" id="wo-thumbs"></div>
+        <button class="work-overlay-nav" id="wo-next" aria-label="Next">→</button>
+      </div>
+      <div class="work-overlay-caption">
+        <div class="caption-meta">
+          <p class="work-overlay-num" id="wo-num"></p>
+          <p class="work-overlay-title" id="wo-title"></p>
+          <div class="work-overlay-tags" id="wo-tags"></div>
+        </div>
+        <div class="caption-body">
+          <p>A documentation of the design process, material selection, and production details. Each piece explores the relationship between concept and craft within the constraints of print media and corporate communication.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Photo Overlay ──────────────────────────────────────────────────── -->
+  <div id="photo-overlay" role="dialog" aria-modal="true" aria-label="Photo">
+    <div class="overlay-backdrop" id="photo-backdrop"></div>
+    <div class="photo-overlay-panel">
+      <button class="photo-overlay-close" id="photo-overlay-close" aria-label="Close">Close ✕</button>
+      <div class="photo-overlay-main" id="po-main"><span class="ph"></span></div>
+      <div class="photo-overlay-thumbs-wrap">
+        <button class="photo-overlay-nav" id="po-prev" aria-label="Previous">←</button>
+        <div class="photo-overlay-thumbs" id="po-thumbs"></div>
+        <button class="photo-overlay-nav" id="po-next" aria-label="Next">→</button>
+      </div>
+      <div class="photo-overlay-caption">
+        <div class="caption-meta">
+          <p class="photo-overlay-num" id="photo-overlay-num"></p>
+          <p class="photo-overlay-title" id="photo-overlay-title"></p>
+          <p class="photo-overlay-cat" id="photo-overlay-cat"></p>
+        </div>
+        <div class="caption-body">
+          <p id="po-caption-body">Shot on location in Tokyo. Part of an ongoing series examining light and human presence in everyday environments. Captured with a focus on natural illumination and the quiet rhythm of urban life.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Contact Overlay ────────────────────────────────────────────────── -->
+  <div id="contact-overlay" role="dialog" aria-modal="true" aria-label="Contact">
+    <div class="contact-backdrop" id="contact-backdrop"></div>
+    <div class="contact-panel">
+      <button class="contact-close" id="contact-close" aria-label="Close">Close ✕</button>
+      <p class="contact-heading">Contact</p>
+      <form class="contact-form" onsubmit="return false;">
+        <div class="contact-field">
+          <label class="contact-label" for="c-name">Name</label>
+          <input class="contact-input" id="c-name" type="text" placeholder="Your name" autocomplete="name">
+        </div>
+        <div class="contact-field">
+          <label class="contact-label" for="c-email">Email</label>
+          <input class="contact-input" id="c-email" type="email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="contact-field">
+          <label class="contact-label" for="c-message">Message</label>
+          <textarea class="contact-textarea" id="c-message" placeholder="Tell me about your project…"></textarea>
+        </div>
+        <button class="contact-submit" type="submit">Send →</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      requestAnimationFrame(() => document.body.classList.add('ready'));
+    });
+
+    // ── View switching ─────────────────────────────────────────────────────
+    const views = {
+      hero:        document.getElementById('view-hero'),
+      design:      document.getElementById('view-design'),
+      photography: document.getElementById('view-photography'),
+    };
+    const navLinks = {
+      design:      document.getElementById('nav-design'),
+      photography: document.getElementById('nav-photography'),
+    };
+    let currentView = 'hero';
+
+    function switchView(id) {
+      if (id === currentView) return;
+      // hide all
+      Object.values(views).forEach(v => v.classList.remove('active'));
+      // show target (force reflow so animation re-triggers)
+      const target = views[id];
+      void target.offsetWidth;
+      target.classList.add('active');
+      // scroll to top
+      window.scrollTo(0, 0);
+      // update nav current state
+      Object.entries(navLinks).forEach(([key, el]) => {
+        el.classList.toggle('current', key === id);
+      });
+      currentView = id;
+    }
+
+    // Nav: site title → hero
+    document.getElementById('site-title').addEventListener('click', e => {
+      e.preventDefault();
+      switchView('hero');
+    });
+
+    // Nav: Graphics / Photography
+    document.getElementById('nav-design').addEventListener('click', e => {
+      e.preventDefault(); switchView('design');
+    });
+    document.getElementById('nav-photography').addEventListener('click', e => {
+      e.preventDefault(); switchView('photography');
+    });
+
+    // ── About overlay ─────────────────────────────────────────────────────
+    const aboutOverlay  = document.getElementById('about-overlay');
+    const aboutBackdrop = document.getElementById('about-backdrop');
+    function openAbout(e) { e.preventDefault(); aboutOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeAbout() { aboutOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('nav-about').addEventListener('click', openAbout);
+    document.getElementById('about-close').addEventListener('click', closeAbout);
+    aboutBackdrop.addEventListener('click', closeAbout);
+
+    // ── Bio language toggle ────────────────────────────────────────────────
+    document.querySelectorAll('.bio-lang-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.lang;
+        document.querySelectorAll('.bio-lang-toggle button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.bio-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelector(`.bio-content[data-content="${lang}"]`).classList.add('active');
+      });
+    });
+
+    // ── Work overlay ──────────────────────────────────────────────────────
+    const workOverlay  = document.getElementById('work-overlay');
+    const workBackdrop = document.getElementById('work-backdrop');
+    const woThumbs     = document.getElementById('wo-thumbs');
+    let wIdx = 0, wTotal = 0;
+
+    function goWork(i) {
+      wIdx = i;
+      document.querySelectorAll('.work-overlay-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
+      woThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
+      document.getElementById('wo-prev').disabled = i === 0;
+      document.getElementById('wo-next').disabled = i === wTotal - 1;
+    }
+    function openWork(item) {
+      document.getElementById('wo-num').textContent   = item.dataset.num   || '';
+      document.getElementById('wo-title').textContent = item.dataset.title || '';
+      const tagsEl = document.getElementById('wo-tags');
+      tagsEl.innerHTML = '';
+      (item.dataset.tags || '').split(',').forEach(t => {
+        const s = document.createElement('span');
+        s.className = 'work-overlay-tag'; s.textContent = t.trim();
+        tagsEl.appendChild(s);
+      });
+      wTotal = parseInt(item.dataset.count || '4');
+      woThumbs.innerHTML = '';
+      for (let i = 0; i < wTotal; i++) {
+        const th = document.createElement('div');
+        th.className = 'work-overlay-thumb';
+        th.innerHTML = '<span class="ph"></span>';
+        th.addEventListener('click', () => goWork(i));
+        woThumbs.appendChild(th);
+      }
+      goWork(0);
+      workOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeWork() { workOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+    document.querySelectorAll('.work-item').forEach(item => item.addEventListener('click', () => openWork(item)));
+    document.getElementById('wo-prev').addEventListener('click', () => { if (wIdx > 0) goWork(wIdx - 1); });
+    document.getElementById('wo-next').addEventListener('click', () => { if (wIdx < wTotal - 1) goWork(wIdx + 1); });
+    document.getElementById('work-overlay-close').addEventListener('click', closeWork);
+    workBackdrop.addEventListener('click', closeWork);
+
+    // ── Photo overlay ──────────────────────────────────────────────────────
+    const photoOverlay  = document.getElementById('photo-overlay');
+    const photoBackdrop = document.getElementById('photo-backdrop');
+    const poThumbs      = document.getElementById('po-thumbs');
+    let pIdx = 0, pTotal = 0, pImages = [];
+
+    function goPhoto(i) {
+      pIdx = i;
+      document.querySelectorAll('.photo-overlay-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
+      poThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
+      document.getElementById('po-prev').disabled = i === 0;
+      document.getElementById('po-next').disabled = i === pTotal - 1;
+      const poMain = document.getElementById('po-main');
+      if (pImages[i]) {
+        const img = new Image();
+        img.alt = '';
+        img.onload = () => { if (img.naturalHeight > img.naturalWidth) img.style.objectFit = 'contain'; };
+        img.src = pImages[i];
+        poMain.innerHTML = '';
+        poMain.appendChild(img);
+      } else {
+        poMain.innerHTML = '<span class="ph"></span>';
+      }
+    }
+    function openPhoto(item) {
+      document.getElementById('photo-overlay-num').textContent   = item.dataset.num   || '';
+      document.getElementById('photo-overlay-title').textContent = item.dataset.title || '';
+      document.getElementById('photo-overlay-cat').textContent   = item.dataset.cat   || '';
+      document.getElementById('po-caption-body').innerHTML       = item.dataset.caption || '';
+      pImages = item.dataset.images ? item.dataset.images.split('|') : [];
+      pTotal  = pImages.length || parseInt(item.dataset.count || '5');
+      poThumbs.innerHTML = '';
+      for (let i = 0; i < pTotal; i++) {
+        const th = document.createElement('div');
+        th.className = 'photo-overlay-thumb';
+        th.innerHTML = pImages[i]
+          ? `<img src="${pImages[i]}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`
+          : '<span class="ph"></span>';
+        th.addEventListener('click', () => goPhoto(i));
+        poThumbs.appendChild(th);
+      }
+      goPhoto(0);
+      photoOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePhoto() { photoOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+    document.querySelectorAll('.gallery-item').forEach(item => item.addEventListener('click', () => openPhoto(item)));
+    document.getElementById('po-prev').addEventListener('click', () => { if (pIdx > 0) goPhoto(pIdx - 1); });
+    document.getElementById('po-next').addEventListener('click', () => { if (pIdx < pTotal - 1) goPhoto(pIdx + 1); });
+    document.getElementById('photo-overlay-close').addEventListener('click', closePhoto);
+    photoBackdrop.addEventListener('click', closePhoto);
+
+    // ── Filter bars ───────────────────────────────────────────────────────
+    function setupFilter(barId, itemSelector) {
+      let active = null;
+      document.querySelectorAll(`#${barId} .filter-btn`).forEach(btn => {
+        btn.addEventListener('click', () => {
+          const f = btn.dataset.filter;
+          active = (f === 'all' || f === active) ? null : f;
+          document.querySelectorAll(`#${barId} .filter-btn`).forEach(b => {
+            b.classList.toggle('active', b.dataset.filter === 'all' ? !active : b.dataset.filter === active);
+          });
+          document.querySelectorAll(itemSelector).forEach(item => {
+            const tags = (item.dataset.tags || '').split(',').map(t => t.trim());
+            item.style.display = (!active || tags.includes(active)) ? '' : 'none';
+          });
+        });
+      });
+    }
+    setupFilter('design-filter', '#design .work-item');
+    setupFilter('photo-filter', '#photography .gallery-item');
+
+    // ── Contact overlay ────────────────────────────────────────────────────
+    const contactOverlay  = document.getElementById('contact-overlay');
+    const contactBackdrop = document.getElementById('contact-backdrop');
+    function openContact(e) { e.preventDefault(); contactOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeContact() { contactOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('nav-contact').addEventListener('click', openContact);
+    document.getElementById('contact-close').addEventListener('click', closeContact);
+    contactBackdrop.addEventListener('click', closeContact);
+
+    // ── Keyboard navigation ───────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeAbout(); closeWork(); closePhoto(); closeContact(); }
+      if (photoOverlay.classList.contains('open')) {
+        if (e.key === 'ArrowLeft'  && pIdx > 0)            { e.preventDefault(); goPhoto(pIdx - 1); }
+        if (e.key === 'ArrowRight' && pIdx < pTotal - 1)   { e.preventDefault(); goPhoto(pIdx + 1); }
+      }
+    });
+
+  </script>
+</body>
+</html>
