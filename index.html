@@ -70,6 +70,7 @@
       top: 0; left: 0; right: 0;
       z-index: 100;
       padding: 1.25rem var(--s4);
+      background: linear-gradient(to bottom, var(--bg) 60%, transparent);
     }
     #site-title {
       font-family: var(--sans);
@@ -226,7 +227,7 @@
       letter-spacing: 0.14em; color: var(--muted);
       margin-bottom: 0.25rem; font-variant-numeric: tabular-nums;
     }
-    .work-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; }
+    .work-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .work-tags { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .work-tag {
       font-family: var(--sans); font-size: 0.4375rem;
@@ -349,6 +350,8 @@
       color: var(--muted); padding-top: 0.05em; font-variant-numeric: tabular-nums;
     }
     .bio-timeline .desc { font-family: var(--jp); font-size: 0.8125rem; }
+    .bio-statement { font-family: var(--jp); font-size: 0.8125rem; line-height: 1.9; color: var(--text); }
+    .bio-statement.en { font-family: var(--body); }
     .bio-timeline .desc.en { font-family: var(--body); }
 
     /* ─── Work Overlay (Design) ───────────────────────────────────────────── */
@@ -366,8 +369,8 @@
     }
     .work-overlay-panel {
       position: relative; z-index: 1;
-      width: min(860px, calc(100vw - 2rem));
-      height: min(580px, 85svh);
+      width: min(1060px, calc(100vw - 2rem));
+      height: min(850px, 92svh);
       background: var(--bg);
       display: flex; flex-direction: column;
       transform: translateX(40px); opacity: 0;
@@ -376,7 +379,7 @@
     }
     #work-overlay.open .work-overlay-panel { transform: translateX(0); opacity: 1; }
     .work-overlay-close {
-      position: absolute; top: var(--s2); right: var(--s3);
+      position: absolute; top: -2.5rem; right: var(--s3);
       background: none; border: none; cursor: pointer;
       font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--muted); padding: var(--s1);
@@ -388,6 +391,7 @@
       position: relative; background: var(--ph); overflow: hidden;
     }
     .work-overlay-main .ph { width: 100%; height: 100%; display: block; }
+    .work-overlay-main img { width: 100%; height: auto; display: block; }
     .work-overlay-thumbs-wrap { flex: 0 0 auto; position: relative; background: rgba(28, 27, 25, 0.06); }
     .work-overlay-thumbs {
       display: flex; gap: 3px; padding: 6px 0;
@@ -428,7 +432,7 @@
     .work-overlay-title {
       font-family: var(--serif);
       font-size: clamp(0.875rem, 1.8vw, 1.2rem);
-      font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; white-space: nowrap;
     }
     .work-overlay-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
     .work-overlay-tag {
@@ -452,8 +456,8 @@
     }
     .photo-overlay-panel {
       position: relative; z-index: 1;
-      width: min(640px, calc(100vw - 2rem));
-      max-height: 90svh;
+      width: min(880px, calc(100vw - 2rem));
+      height: min(750px, 92svh);
       background: var(--bg);
       display: flex; flex-direction: column;
       transform: translateX(40px); opacity: 0;
@@ -462,7 +466,7 @@
     }
     #photo-overlay.open .photo-overlay-panel { transform: translateX(0); opacity: 1; }
     .photo-overlay-close {
-      position: absolute; top: var(--s2); right: var(--s3);
+      position: absolute; top: -2.5rem; right: var(--s3);
       background: none; border: none; cursor: pointer;
       font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--muted); padding: var(--s1);
@@ -470,13 +474,13 @@
     }
     .photo-overlay-close:hover { color: var(--text); }
     .photo-overlay-main {
-      width: 100%; flex: 0 0 55svh;
-      height: 55svh; overflow: hidden;
+      width: 100%; flex: 1 1 0; min-height: 0;
+      overflow: hidden;
       position: relative; display: flex; align-items: center; justify-content: center;
       background: #605B54;
     }
     .photo-overlay-main .ph { width: 100%; aspect-ratio: 4/3; display: block; background: var(--ph); }
-    .photo-overlay-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-overlay-main img { width: 100%; height: auto; display: block; }
     .photo-overlay-thumbs-wrap { flex: 0 0 auto; position: relative; background: rgba(28, 27, 25, 0.06); }
     .photo-overlay-thumbs {
       display: flex; gap: 3px; padding: 6px 0;
@@ -521,6 +525,7 @@
       font-family: var(--body); font-size: 0.75rem;
       line-height: 1.75; color: var(--muted);
       display: flex; align-items: flex-start;
+      padding-top: 0.85rem;
     }
     .photo-overlay-num {
       font-family: var(--body); font-size: 0.5rem;
@@ -645,6 +650,42 @@
         <div id="design-works">
           <div class="works-grid">
 
+            <article class="work-item" style="--d:0.00s" data-num="01" data-title="TOKYU Philosophy" data-tags="Branding,Illustration" data-count="11" data-caption="渋谷のまちづくりへの想いを伝える東急のブランディングビジュアルPJに参加する。<br>ステッカーイラストレーションを担当。" data-images="link/tokyu/tokyo_01.jpg|link/tokyu/tokyo_02.jpg|link/tokyu/tokyo_03.jpg|link/tokyu/tokyo_04.jpg|link/tokyu/tokyo_05.jpg|link/tokyu/tokyo_06.jpg|link/tokyu/tokyo_07.jpg|link/tokyu/tokyo_08.jpg|link/tokyu/tokyo_09.jpg|link/tokyu/tokyo_10.jpg|link/tokyu/tokyo_11.jpg">
+              <div class="work-thumb">
+                <img src="link/tokyu/tokyo_01.jpg" alt="TOKYU Philosophy" style="width:100%;height:100%;object-fit:cover;">
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">01</p>
+                <p class="work-title">TOKYU Philosophy</p>
+                <div class="work-tags"><span class="work-tag">Branding</span><span class="work-tag">Illustration</span></div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.06s" data-num="02" data-title="TOKYU Playwork" data-tags="Branding" data-count="8" data-caption="東急のブランディングプロジェクト「Playwork」にデザイナーとして関わる。<br>グラフィックパーツの加工及び制作を担当する。" data-images="link/Playwork/DSC02206.jpg|link/Playwork/DSC02207.jpg|link/Playwork/DSC02218.jpg|link/Playwork/DSC02242.jpg|link/Playwork/DSC02248.jpg|link/Playwork/DSC02278.jpg|link/Playwork/DSC03243.jpg|link/Playwork/DSC03615.jpg">
+              <div class="work-thumb">
+                <img src="link/Playwork/DSC02206.jpg" alt="TOKYU Playwork" style="width:100%;height:100%;object-fit:cover;">
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">02</p>
+                <p class="work-title">TOKYU Playwork</p>
+                <div class="work-tags"><span class="work-tag">Branding</span></div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.12s" data-num="03" data-title="Seiryo SDGs" data-tags="Branding" data-count="5" data-caption="青陵高校のSDGsキャンペーンPJにデザイナーとして参加。<br>ビジュアル全体の切り抜き演出を主に担当し、キャンペーンのビジュアルアイデンティティ構築に携わる。<br><br><a href=&quot;https://www.seiryo-js.ed.jp/news/d8dfaf8d-00a1-489a-9595-287598ba05b5&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>seiryo-js.ed.jp →</a>" data-images="link/Seiryo/Seiryo_01.jpg|link/Seiryo/Seiryo_02.jpg|link/Seiryo/Seiryo_03.jpg|link/Seiryo/Seiryo_04.jpg|link/Seiryo/Seiryo_05.jpg">
+              <div class="work-thumb">
+                <img src="link/Seiryo/Seiryo_01.jpg" alt="Seiryo SDGs" style="width:100%;height:100%;object-fit:cover;">
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">03</p>
+                <p class="work-title">Seiryo SDGs</p>
+                <div class="work-tags"><span class="work-tag">Branding</span></div>
+              </div>
+            </article>
+
             <article class="work-item" style="--d:0.00s" data-num="01" data-title="Project Title 01" data-tags="Print">
               <div class="work-thumb">
                 <!-- ★ ここに写真を差し込む -->
@@ -696,56 +737,6 @@
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.18s" data-num="04" data-title="Project Title 04" data-tags="Corporate">
-              <div class="work-thumb">
-                <!-- ★ ここに写真を差し込む -->
-                <span class="ph"></span>
-                <div class="work-thumb-overlay">
-                  <span class="work-hover-label">view →</span>
-                </div>
-              </div>
-              <div class="work-meta">
-                <p class="work-num">04</p>
-                <p class="work-title">Project Title 04</p>
-                <div class="work-tags">
-                  <span class="work-tag">Corporate</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="work-item" style="--d:0.24s" data-num="05" data-title="Project Title 05" data-tags="Print">
-              <div class="work-thumb">
-                <!-- ★ ここに写真を差し込む -->
-                <span class="ph"></span>
-                <div class="work-thumb-overlay">
-                  <span class="work-hover-label">view →</span>
-                </div>
-              </div>
-              <div class="work-meta">
-                <p class="work-num">05</p>
-                <p class="work-title">Project Title 05</p>
-                <div class="work-tags">
-                  <span class="work-tag">Print</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="work-item" style="--d:0.30s" data-num="06" data-title="Project Title 06" data-tags="Print">
-              <div class="work-thumb">
-                <!-- ★ ここに写真を差し込む -->
-                <span class="ph"></span>
-                <div class="work-thumb-overlay">
-                  <span class="work-hover-label">view →</span>
-                </div>
-              </div>
-              <div class="work-meta">
-                <p class="work-num">06</p>
-                <p class="work-title">Project Title 06</p>
-                <div class="work-tags">
-                  <span class="work-tag">Print</span>
-                </div>
-              </div>
-            </article>
 
           </div>
         </div>
@@ -761,28 +752,38 @@
         </div>
         <div class="filter-bar" id="photo-filter">
           <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Architecture">Architecture</button>
           <button class="filter-btn" data-filter="Corporate">Corporate</button>
-          <button class="filter-btn" data-filter="Space">Space</button>
+          <button class="filter-btn" data-filter="Interior">Interior</button>
           <button class="filter-btn" data-filter="Portrait">Portrait</button>
+          <button class="filter-btn" data-filter="Space">Space</button>
         </div>
         <div id="photo-works">
           <div class="gallery-grid">
 
-            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="Yokohama Timberwharf" data-cat="Photography" data-tags="Space,Corporate" data-count="7" data-caption="横浜・みなとみらいに位置する商業複合施設の竣工撮影を担当。木材をふんだんに用いた空間の、光と素材が織りなす豊かな表情を記録した。<br><a href='https://yokohama-timberwharf.com' target='_blank' rel='noopener'>yokohama-timberwharf.com →</a>" data-images="link/YTW/YTW_01.jpg|link/YTW/YTW_02.jpg|link/YTW/YTW_03.jpg|link/YTW/YTW_04.jpg|link/YTW/YTW_05.jpg|link/YTW/YTW_06.jpg|link/YTW/YTW_07.jpg">
-              <div class="gallery-thumb"><img src="link/YTW/YTW_01.jpg" alt="Yokohama Timberwharf" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">01</p><p class="gallery-title">Yokohama Timberwharf</p><div class="gallery-tags"><span class="gallery-tag">Space</span><span class="gallery-tag">Corporate</span></div></div>
+            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="Yokohama Timber Wharf" data-cat="Photography" data-tags="Architecture,Corporate,Space" data-count="7" data-caption="横浜・みなとみらいに位置する商業複合施設の竣工撮影を担当。木材をふんだんに用いた空間の、光と素材が織りなす豊かな表情を記録した。<br><a href='https://yokohama-timberwharf.com' target='_blank' rel='noopener'>yokohama-timberwharf.com →</a>" data-images="link/YTW/YTW_01.jpg|link/YTW/YTW_02.jpg|link/YTW/YTW_03.jpg|link/YTW/YTW_04.jpg|link/YTW/YTW_05.jpg|link/YTW/YTW_06.jpg|link/YTW/YTW_07.jpg">
+              <div class="gallery-thumb"><img src="link/YTW/YTW_01.jpg" alt="Yokohama Timber Wharf" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">01</p><p class="gallery-title">Yokohama Timber Wharf</p><div class="gallery-tags"><span class="gallery-tag">Architecture</span><span class="gallery-tag">Corporate</span><span class="gallery-tag">Space</span></div></div>
             </article>
-            <article class="gallery-item" style="--d:0.05s" data-num="02" data-title="RIZAP" data-cat="Photography" data-tags="Corporate,Space" data-count="23" data-caption="RIZAPのトレーニング施設撮影を担当。黒を基調とした内装に差し込む光が、緊張感と集中を生む空間の空気感を記録した。" data-images="link/rizap/DSC00037_K.jpg|link/rizap/DSC00041_K_2.jpg|link/rizap/DSC00055_HDR_K.jpg|link/rizap/DSC00058_HDR_K.jpg|link/rizap/DSC00061_HDR_K.jpg|link/rizap/DSC00090_HDR_K.jpg|link/rizap/DSC00100_HDR_K.jpg|link/rizap/DSC00104_HDR_K.jpg|link/rizap/DSC00120_HDR_K.jpg|link/rizap/DSC00140_HDR_K.jpg|link/rizap/DSC00150_HDR_K_3.jpg|link/rizap/DSC00162_HDR_K_3.jpg|link/rizap/DSC00164_HDR_K_3.jpg|link/rizap/DSC00173_HDR_K_3.jpg|link/rizap/DSC00185_HDR_K.jpg|link/rizap/DSC00213_HDR_K.jpg|link/rizap/DSC00222_HDR_K_3.jpg|link/rizap/DSC00243_HDR_K.jpg|link/rizap/DSC00255_HDR_K.jpg|link/rizap/DSC00259_K.jpg|link/rizap/DSC00267_K_2.jpg|link/rizap/DSC00277_K_2.jpg|link/rizap/DSC00302_K.jpg">
-              <div class="gallery-thumb"><img src="link/rizap/DSC00037_K.jpg" alt="RIZAP" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">RIZAP</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Space</span></div></div>
-            </article>
-            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="R-01 Series" data-cat="Photography" data-tags="Branding,Product" data-count="10" data-caption="「DAFT about DRAFT」の新プロダクト撮影とアートディレクションを一貫して担当。光と素材、余白で語るビジュアルを制作した。<br><a href='https://daft-about-draft.com/en' target='_blank' rel='noopener'>daft-about-draft.com →</a>" data-images="link/rug/rug-01.jpg|link/rug/rug-02.jpg|link/rug/rug-03.jpg|link/rug/rug-04.jpg|link/rug/rug-05.jpg|link/rug/rug-06.jpg|link/rug/rug-07.jpg|link/rug/rug-08.jpg|link/rug/rug-09.jpg|link/rug/rug-10.jpg">
+            <article class="gallery-item" style="--d:0.05s" data-num="02" data-title="R-01 Series" data-cat="Photography" data-tags="Branding,Corporate,Product" data-count="10" data-caption="「DAFT about DRAFT」の新プロダクト撮影とアートディレクションを一貫して担当。光と素材、余白で語るビジュアルを制作した。<br><a href='https://daft-about-draft.com/en' target='_blank' rel='noopener'>daft-about-draft.com →</a>" data-images="link/rug/rug-01.jpg|link/rug/rug-02.jpg|link/rug/rug-03.jpg|link/rug/rug-04.jpg|link/rug/rug-05.jpg|link/rug/rug-06.jpg|link/rug/rug-07.jpg|link/rug/rug-08.jpg|link/rug/rug-09.jpg|link/rug/rug-10.jpg">
               <div class="gallery-thumb"><img src="link/rug/rug-02.jpg" alt="R-01 Series" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">01</p><p class="gallery-title">R-01 Series</p><div class="gallery-tags"><span class="gallery-tag">Branding</span><span class="gallery-tag">Product</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">R-01 Series</p><div class="gallery-tags"><span class="gallery-tag">Branding</span><span class="gallery-tag">Corporate</span><span class="gallery-tag">Product</span></div></div>
             </article>
-            <article class="gallery-item" style="--d:0.05s" data-num="02" data-title="Staff Portrait" data-cat="Photography" data-tags="Corporate,Portrait" data-count="17" data-caption="DRAFT inc.の社員を6年間で200名超を撮影。(一部抜粋)<br>プロフィール写真・コンペ資料などに活用される。" data-images="link/portrait/portrait_01.jpg|link/portrait/portrait_02.jpg|link/portrait/portrait_03.jpg|link/portrait/portrait_04.jpg|link/portrait/portrait_05.jpg|link/portrait/portrait_06.jpg|link/portrait/portrait_07.jpg|link/portrait/portrait_08.jpg|link/portrait/portrait_09.jpg|link/portrait/portrait_10.jpg|link/portrait/portrait_11.jpg|link/portrait/portrait_12.jpg|link/portrait/portrait_13.jpg|link/portrait/portrait_14.jpg|link/portrait/portrait_15.jpg|link/portrait/portrait_16.jpg|link/portrait/portrait_17.jpg">
+            <article class="gallery-item" style="--d:0.00s" data-num="03" data-title="RIZAP" data-cat="Photography" data-tags="Interior,Space" data-count="23" data-caption="RIZAPの本社オフィス内装撮影を担当。黒を基調とした空間に差し込む光が、緊張感と集中を生む独自の空気感を記録した。" data-images="link/rizap/DSC00037_K.jpg|link/rizap/DSC00041_K_2.jpg|link/rizap/DSC00055_HDR_K.jpg|link/rizap/DSC00058_HDR_K.jpg|link/rizap/DSC00061_HDR_K.jpg|link/rizap/DSC00090_HDR_K.jpg|link/rizap/DSC00100_HDR_K.jpg|link/rizap/DSC00104_HDR_K.jpg|link/rizap/DSC00120_HDR_K.jpg|link/rizap/DSC00140_HDR_K.jpg|link/rizap/DSC00150_HDR_K_3.jpg|link/rizap/DSC00162_HDR_K_3.jpg|link/rizap/DSC00164_HDR_K_3.jpg|link/rizap/DSC00173_HDR_K_3.jpg|link/rizap/DSC00185_HDR_K.jpg|link/rizap/DSC00213_HDR_K.jpg|link/rizap/DSC00222_HDR_K_3.jpg|link/rizap/DSC00243_HDR_K.jpg|link/rizap/DSC00255_HDR_K.jpg|link/rizap/DSC00259_K.jpg|link/rizap/DSC00267_K_2.jpg|link/rizap/DSC00277_K_2.jpg|link/rizap/DSC00302_K.jpg">
+              <div class="gallery-thumb"><img src="link/rizap/DSC00037_K.jpg" alt="RIZAP" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">03</p><p class="gallery-title">RIZAP</p><div class="gallery-tags"><span class="gallery-tag">Interior</span><span class="gallery-tag">Space</span></div></div>
+            </article>
+            <article class="gallery-item" style="--d:0.06s" data-num="04" data-title="Breezelounge" data-cat="Photography" data-tags="Interior,Space" data-count="17" data-caption="大阪駅直結のコワーキングスペース「ブリーゼラウンジ」の内装撮影を担当。開放的な空間に満ちる光と、洗練された素材の表情を記録した。" data-images="link/Breezelounge/breezelounge_01.jpg|link/Breezelounge/breezelounge_02.jpg|link/Breezelounge/breezelounge_03.jpg|link/Breezelounge/breezelounge_04.jpg|link/Breezelounge/breezelounge_05.jpg|link/Breezelounge/breezelounge_06.jpg|link/Breezelounge/breezelounge_07.jpg|link/Breezelounge/breezelounge_08.jpg|link/Breezelounge/breezelounge_09.jpg|link/Breezelounge/breezelounge_10.jpg|link/Breezelounge/breezelounge_11.jpg|link/Breezelounge/breezelounge_12.jpg|link/Breezelounge/breezelounge_13.jpg|link/Breezelounge/breezelounge_14.jpg|link/Breezelounge/breezelounge_15.jpg|link/Breezelounge/breezelounge_16.jpg|link/Breezelounge/breezelounge_17.jpg">
+              <div class="gallery-thumb"><img src="link/Breezelounge/breezelounge_02.jpg" alt="Breezelounge" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">04</p><p class="gallery-title">Breezelounge</p><div class="gallery-tags"><span class="gallery-tag">Interior</span><span class="gallery-tag">Space</span></div></div>
+            </article>
+            <article class="gallery-item" style="--d:0.05s" data-num="05" data-title="Isetan Salone" data-cat="Photography" data-tags="Corporate,Interior,Space" data-count="4" data-caption="六本木・伊勢丹サローネにて開催されたDRAFTのポップアップストアを撮影。<br>上質な空間に宿る光と素材の表情を丁寧に記録した。" data-images="link/Isetan_Salone/isetan_01.jpg|link/Isetan_Salone/isetan_02.jpg|link/Isetan_Salone/isetan_03.jpg|link/Isetan_Salone/isetan_04.jpg">
+              <div class="gallery-thumb"><img src="link/Isetan_Salone/isetan_01.jpg" alt="Isetan Salone" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">05</p><p class="gallery-title">Isetan Salone</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Interior</span><span class="gallery-tag">Space</span></div></div>
+            </article>
+            <article class="gallery-item" style="--d:0.06s" data-num="06" data-title="Staff Portrait" data-cat="Photography" data-tags="Corporate,Portrait" data-count="17" data-caption="DRAFT inc.の社員を6年間で200名超を撮影。(一部抜粋)<br>プロフィール写真・コンペ資料などに活用される。" data-images="link/portrait/portrait_01.jpg|link/portrait/portrait_02.jpg|link/portrait/portrait_03.jpg|link/portrait/portrait_04.jpg|link/portrait/portrait_05.jpg|link/portrait/portrait_06.jpg|link/portrait/portrait_07.jpg|link/portrait/portrait_08.jpg|link/portrait/portrait_09.jpg|link/portrait/portrait_10.jpg|link/portrait/portrait_11.jpg|link/portrait/portrait_12.jpg|link/portrait/portrait_13.jpg|link/portrait/portrait_14.jpg|link/portrait/portrait_15.jpg|link/portrait/portrait_16.jpg|link/portrait/portrait_17.jpg">
               <div class="gallery-thumb"><img src="link/portrait/portrait_01.jpg" alt="Staff Portrait" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">Staff Portrait</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Portrait</span></div></div>
+              <div class="gallery-meta"><p class="gallery-num">06</p><p class="gallery-title">Staff Portrait</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Portrait</span></div></div>
             </article>
 
             <article class="gallery-item" style="--d:0.06s" data-num="02" data-title="Photo Title 02" data-cat="Photography" data-tags="Portrait" data-count="5">
@@ -882,9 +883,7 @@
           <p class="work-overlay-title" id="wo-title"></p>
           <div class="work-overlay-tags" id="wo-tags"></div>
         </div>
-        <div class="caption-body">
-          <p>A documentation of the design process, material selection, and production details. Each piece explores the relationship between concept and craft within the constraints of print media and corporate communication.</p>
-        </div>
+        <div class="caption-body" id="wo-caption-body"></div>
       </div>
     </div>
   </div>
@@ -1009,7 +1008,7 @@
     const workOverlay  = document.getElementById('work-overlay');
     const workBackdrop = document.getElementById('work-backdrop');
     const woThumbs     = document.getElementById('wo-thumbs');
-    let wIdx = 0, wTotal = 0;
+    let wIdx = 0, wTotal = 0, wImages = [];
 
     function goWork(i) {
       wIdx = i;
@@ -1017,10 +1016,26 @@
       woThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
       document.getElementById('wo-prev').disabled = i === 0;
       document.getElementById('wo-next').disabled = i === wTotal - 1;
+      const woMain = document.getElementById('wo-main');
+      if (wImages[i]) {
+        const img = new Image();
+        img.alt = '';
+        img.onload = () => {
+          if (img.naturalHeight > img.naturalWidth) {
+            img.style.width = 'auto'; img.style.height = '100%';
+          }
+        };
+        img.src = wImages[i];
+        woMain.innerHTML = '';
+        woMain.appendChild(img);
+      } else {
+        woMain.innerHTML = '<span class="ph"></span>';
+      }
     }
     function openWork(item) {
-      document.getElementById('wo-num').textContent   = item.dataset.num   || '';
-      document.getElementById('wo-title').textContent = item.dataset.title || '';
+      document.getElementById('wo-num').textContent        = item.dataset.num     || '';
+      document.getElementById('wo-title').textContent      = item.dataset.title   || '';
+      document.getElementById('wo-caption-body').innerHTML = item.dataset.caption || '';
       const tagsEl = document.getElementById('wo-tags');
       tagsEl.innerHTML = '';
       (item.dataset.tags || '').split(',').forEach(t => {
@@ -1028,12 +1043,15 @@
         s.className = 'work-overlay-tag'; s.textContent = t.trim();
         tagsEl.appendChild(s);
       });
-      wTotal = parseInt(item.dataset.count || '4');
+      wImages = item.dataset.images ? item.dataset.images.split('|') : [];
+      wTotal = wImages.length || parseInt(item.dataset.count || '4');
       woThumbs.innerHTML = '';
       for (let i = 0; i < wTotal; i++) {
         const th = document.createElement('div');
         th.className = 'work-overlay-thumb';
-        th.innerHTML = '<span class="ph"></span>';
+        th.innerHTML = wImages[i]
+          ? `<img src="${wImages[i]}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`
+          : '<span class="ph"></span>';
         th.addEventListener('click', () => goWork(i));
         woThumbs.appendChild(th);
       }
@@ -1065,7 +1083,11 @@
       if (pImages[i]) {
         const img = new Image();
         img.alt = '';
-        img.onload = () => { if (img.naturalHeight > img.naturalWidth) img.style.objectFit = 'contain'; };
+        img.onload = () => {
+          if (img.naturalHeight > img.naturalWidth) {
+            img.style.width = 'auto'; img.style.height = '100%';
+          }
+        };
         img.src = pImages[i];
         poMain.innerHTML = '';
         poMain.appendChild(img);
@@ -1121,6 +1143,22 @@
     }
     setupFilter('design-filter', '#design .work-item');
     setupFilter('photo-filter', '#photography .gallery-item');
+
+    // ── Tag-click filtering ────────────────────────────────────────────────
+    function activateTagFilter(barId, tagText) {
+      const btn = [...document.querySelectorAll(`#${barId} .filter-btn`)].find(
+        b => b.dataset.filter.toLowerCase() === tagText.toLowerCase()
+      );
+      if (btn) btn.click();
+    }
+    document.querySelectorAll('#design .work-tag').forEach(tag => {
+      tag.style.cursor = 'pointer';
+      tag.addEventListener('click', e => { e.stopPropagation(); activateTagFilter('design-filter', tag.textContent.trim()); });
+    });
+    document.querySelectorAll('#photography .gallery-tag').forEach(tag => {
+      tag.style.cursor = 'pointer';
+      tag.addEventListener('click', e => { e.stopPropagation(); activateTagFilter('photo-filter', tag.textContent.trim()); });
+    });
 
     // ── Contact overlay ────────────────────────────────────────────────────
     const contactOverlay  = document.getElementById('contact-overlay');
