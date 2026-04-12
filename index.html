@@ -5,7 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Little Autumn Space</title>
-  <link rel="stylesheet" href="https://use.typekit.net/vnw5jnx.css">
+  <script>
+    (function(d) {
+      var config = {
+        kitId: 'vnw5jnx',
+        scriptTimeout: 3000,
+        async: true
+      },
+      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+    })(document);
+  </script>
   <style>
     /* ─── Design tokens ─────────────────────────────────────────────────── */
     :root {
@@ -17,7 +26,7 @@
       --border:      rgba(28, 27, 25, 0.10);
 
       --serif: 'norman-variable', Georgia, serif;
-      --sans:  'gotham', 'Helvetica Neue', sans-serif;
+      --sans:  'gotham-narrow', 'Helvetica Neue', sans-serif;
       --body:  'acumin-pro', 'Helvetica Neue', sans-serif;
       --jp:    'noto-sans-cjk-jp', sans-serif;
 
@@ -75,7 +84,7 @@
     #site-title {
       font-family: var(--sans);
       font-size: 0.625rem;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--text);
@@ -101,7 +110,7 @@
     #site-nav a {
       font-family: var(--sans);
       font-size: 0.625rem;
-      font-weight: 400;
+      font-weight: 300;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--text);
@@ -131,24 +140,28 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 6rem var(--s4) 5rem;
+      padding: clamp(3rem, 6svh, 6rem) var(--s4) clamp(2.5rem, 5svh, 5rem);
     }
     .hero-title {
       font-family: var(--serif);
-      font-size: clamp(5rem, 14vw, 14rem);
-      font-weight: 700;
-      line-height: 0.84;
+      font-size: clamp(4rem, min(12vw, 24svh), 11rem);
+      font-weight: 100;
+      line-height: 1.0;
       letter-spacing: -0.025em;
     }
-    .hero-title span {
-      display: block;
-      transform: translateX(40px);
-      opacity: 0;
-      transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    /* ── Hero animation (brush reveal) ───────────────────────────────────── */
+    @keyframes brushReveal {
+      from { clip-path: inset(-60% 100% -60% 0%); }
+      to   { clip-path: inset(-60% 0%   -60% 0%); }
     }
-    body.ready .hero-title span:nth-child(1) { transform: translateX(0); opacity: 1; transition-delay: 0.0s; }
-    body.ready .hero-title span:nth-child(2) { transform: translateX(0); opacity: 1; transition-delay: 0.1s; }
-    body.ready .hero-title span:nth-child(3) { transform: translateX(0); opacity: 1; transition-delay: 0.2s; }
+    .hero-title span {
+      display: block; opacity: 1; transform: none; transition: none;
+      clip-path: inset(-60% 100% -60% 0%);
+    }
+    body.ready .hero-title span:nth-child(1) { animation: brushReveal 2.3s var(--ease) 0.0s both; }
+    body.ready .hero-title span:nth-child(2) { animation: brushReveal 2.3s var(--ease) 0.8s both; }
+    body.ready .hero-title span:nth-child(3) { animation: brushReveal 2.3s var(--ease) 1.6s both; }
+
 
     /* ─── Section Header ─────────────────────────────────────────────────── */
     .section-header {
@@ -161,7 +174,7 @@
     .page-title {
       font-family: var(--serif);
       font-size: clamp(2.5rem, 6vw, 5rem);
-      font-weight: 700;
+      font-weight: 100;
       letter-spacing: -0.025em;
       line-height: 0.9;
     }
@@ -180,7 +193,7 @@
     .filter-btn {
       background: none; border: 1px solid var(--border);
       padding: 0.3em 0.9em;
-      font-family: var(--sans); font-size: 0.4375rem;
+      font-family: var(--body); font-size: 0.4375rem;
       letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--muted); cursor: pointer;
       transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
@@ -230,7 +243,7 @@
     .work-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .work-tags { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .work-tag {
-      font-family: var(--sans); font-size: 0.4375rem;
+      font-family: var(--body); font-size: 0.4375rem;
       letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--muted); border: 1px solid var(--border); padding: 0.2em 0.6em;
     }
@@ -277,10 +290,22 @@
     .gallery-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; }
     .gallery-tags { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .gallery-tag {
-      font-family: var(--sans); font-size: 0.4375rem;
+      font-family: var(--body); font-size: 0.4375rem;
       letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--muted); border: 1px solid var(--border); padding: 0.2em 0.6em;
     }
+
+    /* ─── All Works View ─────────────────────────────────────────────────── */
+    #all-works { padding: 0 var(--s4) var(--s7); }
+    #all-works .filter-bar { margin-bottom: var(--s4); }
+    .all-section-label {
+      font-family: var(--sans); font-size: 0.6875rem; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+      margin: var(--s5) 0 var(--s3);
+      padding-bottom: var(--s2); border-bottom: 1px solid var(--border);
+    }
+    .all-wrap:first-of-type .all-section-label { margin-top: var(--s3); }
+    .all-wrap[style*="none"] { display: none !important; }
 
     /* ─── About Overlay ───────────────────────────────────────────────────── */
     #about-overlay {
@@ -327,14 +352,22 @@
     .bio-content { display: none; }
     .bio-content.active { display: block; }
     .bio-name {
-      font-family: var(--serif);
+      font-family: var(--sans);
       font-size: clamp(1.75rem, 4vw, 2.5rem);
       font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;
       margin-bottom: var(--s5);
     }
+    [data-content="en"] .bio-name {
+      font-family: var(--serif);
+      font-weight: 400;
+    }
+    [data-content="jp"] .bio-name {
+      font-family: 'TsukuMinPr6N-D', 'TsukuMinPr6N-R', 'TsukuMin Pro', '筑紫明朝', 'Hiragino Mincho ProN', serif;
+      font-weight: 700;
+    }
     .bio-section { margin-bottom: var(--s4); }
     .bio-section-label {
-      font-family: var(--sans); font-size: 0.65rem;
+      font-family: var(--sans); font-size: 0.65rem; font-weight: 700;
       letter-spacing: 0.22em; text-transform: uppercase;
       color: var(--muted); margin-bottom: var(--s2);
       padding-bottom: var(--s1); border-bottom: 1px solid var(--border);
@@ -346,13 +379,13 @@
       border-bottom: 1px solid var(--border); line-height: 1.55;
     }
     .bio-timeline .year {
-      font-family: var(--body); font-size: 0.6875rem;
+      font-family: var(--sans); font-weight: 400; font-size: 0.6875rem;
       color: var(--muted); padding-top: 0.05em; font-variant-numeric: tabular-nums;
     }
     .bio-timeline .desc { font-family: var(--jp); font-size: 0.8125rem; }
     .bio-statement { font-family: var(--jp); font-size: 0.8125rem; line-height: 1.9; color: var(--text); }
-    .bio-statement.en { font-family: var(--body); }
-    .bio-timeline .desc.en { font-family: var(--body); }
+    .bio-statement.en { font-family: var(--sans); font-weight: 400; }
+    .bio-timeline .desc.en { font-family: var(--sans); font-weight: 400; }
 
     /* ─── Work Overlay (Design) ───────────────────────────────────────────── */
     #work-overlay {
@@ -388,7 +421,8 @@
     .work-overlay-close:hover { color: var(--text); }
     .work-overlay-main {
       flex: 1 1 0; min-height: 0;
-      position: relative; background: var(--ph); overflow: hidden;
+      position: relative; background: var(--bg); overflow: hidden;
+      transition: opacity 0.24s ease;
     }
     .work-overlay-main .ph { width: 100%; height: 100%; display: block; }
     .work-overlay-main img { width: 100%; height: auto; display: block; }
@@ -396,6 +430,7 @@
     .work-overlay-thumbs {
       display: flex; gap: 3px; padding: 6px 0;
       overflow-x: auto; scrollbar-width: none;
+      justify-content: safe center;
     }
     .work-overlay-thumbs::-webkit-scrollbar { display: none; }
     .work-overlay-thumb {
@@ -431,12 +466,13 @@
     }
     .work-overlay-title {
       font-family: var(--serif);
-      font-size: clamp(0.875rem, 1.8vw, 1.2rem);
-      font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; white-space: nowrap;
+      font-size: 1.2rem;
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+      white-space: nowrap; overflow: hidden;
     }
     .work-overlay-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
     .work-overlay-tag {
-      font-family: var(--sans); font-size: 0.4375rem;
+      font-family: var(--body); font-size: 0.4375rem;
       letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--muted); border: 1px solid var(--border); padding: 0.2em 0.6em;
     }
@@ -477,7 +513,8 @@
       width: 100%; flex: 1 1 0; min-height: 0;
       overflow: hidden;
       position: relative; display: flex; align-items: center; justify-content: center;
-      background: #605B54;
+      background: var(--bg);
+      transition: opacity 0.24s ease;
     }
     .photo-overlay-main .ph { width: 100%; aspect-ratio: 4/3; display: block; background: var(--ph); }
     .photo-overlay-main img { width: 100%; height: auto; display: block; }
@@ -485,6 +522,7 @@
     .photo-overlay-thumbs {
       display: flex; gap: 3px; padding: 6px 0;
       overflow-x: auto; scrollbar-width: none;
+      justify-content: safe center;
     }
     .photo-overlay-thumbs::-webkit-scrollbar { display: none; }
     .photo-overlay-thumb {
@@ -524,7 +562,6 @@
       border-left: 1px solid var(--border); padding-left: var(--s4);
       font-family: var(--body); font-size: 0.75rem;
       line-height: 1.75; color: var(--muted);
-      display: flex; align-items: flex-start;
       padding-top: 0.85rem;
     }
     .photo-overlay-num {
@@ -534,8 +571,9 @@
     }
     .photo-overlay-title {
       font-family: var(--serif);
-      font-size: clamp(0.875rem, 1.8vw, 1.2rem);
+      font-size: 1.2rem;
       font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+      white-space: nowrap; overflow: hidden;
     }
     .photo-overlay-cat {
       font-family: var(--sans); font-size: 0.5rem;
@@ -639,7 +677,7 @@
       <section id="design">
         <div class="section-header">
           <h2 class="page-title">Graphics</h2>
-          <span class="page-count">6 works</span>
+          <span class="page-count">4 works</span>
         </div>
         <div class="filter-bar" id="design-filter">
           <button class="filter-btn active" data-filter="all">All</button>
@@ -674,7 +712,7 @@
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.12s" data-num="03" data-title="Seiryo SDGs" data-tags="Branding" data-count="5" data-caption="青陵高校のSDGsキャンペーンPJにデザイナーとして参加。<br>ビジュアル全体の切り抜き演出を主に担当し、キャンペーンのビジュアルアイデンティティ構築に携わる。<br><br><a href=&quot;https://www.seiryo-js.ed.jp/news/d8dfaf8d-00a1-489a-9595-287598ba05b5&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>seiryo-js.ed.jp →</a>" data-images="link/Seiryo/Seiryo_01.jpg|link/Seiryo/Seiryo_02.jpg|link/Seiryo/Seiryo_03.jpg|link/Seiryo/Seiryo_04.jpg|link/Seiryo/Seiryo_05.jpg">
+            <article class="work-item" style="--d:0.12s" data-num="03" data-title="Seiryo SDGs" data-tags="Branding" data-count="5" data-caption="青陵高校のSDGsキャンペーンPJにデザイナーとして参加。<br>ビジュアル全体の切り抜き演出を主に担当し、キャンペーンのビジュアルアイデンティティ構築に携わる。<br><a href=&quot;https://www.seiryo-js.ed.jp/news/d8dfaf8d-00a1-489a-9595-287598ba05b5&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>seiryo-js.ed.jp →</a>" data-images="link/Seiryo/Seiryo_01.jpg|link/Seiryo/Seiryo_02.jpg|link/Seiryo/Seiryo_03.jpg|link/Seiryo/Seiryo_04.jpg|link/Seiryo/Seiryo_05.jpg">
               <div class="work-thumb">
                 <img src="link/Seiryo/Seiryo_01.jpg" alt="Seiryo SDGs" style="width:100%;height:100%;object-fit:cover;">
                 <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
@@ -686,56 +724,18 @@
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.00s" data-num="01" data-title="Project Title 01" data-tags="Print">
+            <article class="work-item" style="--d:0.18s" data-num="04" data-title="G.O.O.S.E. 2022" data-bg="dark" data-tags="Corporate,Print" data-count="11" data-caption="DRAFTの社内新年会イベント &quot;G.O.O.S.E.&quot; のグラフィックを担当。テーマ &quot;GATSBY&quot; に着想を得て、招待状・メニューカード・ノベルティにいたるまで黒×金の箔押し印刷で統一したビジュアルアイデンティティを構築。贅を尽くしたラグジュアリーな世界観を一貫して演出した。" data-images="link/G.O.O.S.E.2022/goose2022_00.jpg|link/G.O.O.S.E.2022/goose2022_02.jpg|link/G.O.O.S.E.2022/goose2022_03.jpg|link/G.O.O.S.E.2022/goose2022_04.jpg|link/G.O.O.S.E.2022/goose2022_10.jpg|link/G.O.O.S.E.2022/goose2022_05.jpg|link/G.O.O.S.E.2022/goose2022_06.jpg|link/G.O.O.S.E.2022/goose2022_08.jpg|link/G.O.O.S.E.2022/goose2022_09.jpg|link/G.O.O.S.E.2022/goose2022_11.jpg|link/G.O.O.S.E.2022/goose2022_12.jpg">
               <div class="work-thumb">
-                <!-- ★ ここに写真を差し込む -->
-                <span class="ph"></span>
-                <div class="work-thumb-overlay">
-                  <span class="work-hover-label">view →</span>
-                </div>
+                <img src="link/G.O.O.S.E.2022/goose2022_00.jpg" alt="G.O.O.S.E. 2022" style="width:100%;height:100%;object-fit:cover;">
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
               </div>
               <div class="work-meta">
-                <p class="work-num">01</p>
-                <p class="work-title">Project Title 01</p>
-                <div class="work-tags">
-                  <span class="work-tag">Print</span>
-                </div>
+                <p class="work-num">04</p>
+                <p class="work-title">G.O.O.S.E. 2022</p>
+                <div class="work-tags"><span class="work-tag">Corporate</span><span class="work-tag">Print</span></div>
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.06s" data-num="02" data-title="Project Title 02" data-tags="Branding">
-              <div class="work-thumb">
-                <!-- ★ ここに写真を差し込む -->
-                <span class="ph"></span>
-                <div class="work-thumb-overlay">
-                  <span class="work-hover-label">view →</span>
-                </div>
-              </div>
-              <div class="work-meta">
-                <p class="work-num">02</p>
-                <p class="work-title">Project Title 02</p>
-                <div class="work-tags">
-                  <span class="work-tag">Branding</span>
-                </div>
-              </div>
-            </article>
-
-            <article class="work-item" style="--d:0.12s" data-num="03" data-title="Project Title 03" data-tags="Print">
-              <div class="work-thumb">
-                <!-- ★ ここに写真を差し込む -->
-                <span class="ph"></span>
-                <div class="work-thumb-overlay">
-                  <span class="work-hover-label">view →</span>
-                </div>
-              </div>
-              <div class="work-meta">
-                <p class="work-num">03</p>
-                <p class="work-title">Project Title 03</p>
-                <div class="work-tags">
-                  <span class="work-tag">Print</span>
-                </div>
-              </div>
-            </article>
 
 
           </div>
@@ -777,29 +777,21 @@
               <div class="gallery-thumb"><img src="link/Breezelounge/breezelounge_02.jpg" alt="Breezelounge" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
               <div class="gallery-meta"><p class="gallery-num">04</p><p class="gallery-title">Breezelounge</p><div class="gallery-tags"><span class="gallery-tag">Interior</span><span class="gallery-tag">Space</span></div></div>
             </article>
-            <article class="gallery-item" style="--d:0.05s" data-num="05" data-title="Isetan Salone" data-cat="Photography" data-tags="Corporate,Interior,Space" data-count="4" data-caption="六本木・伊勢丹サローネにて開催されたDRAFTのポップアップストアを撮影。<br>上質な空間に宿る光と素材の表情を丁寧に記録した。" data-images="link/Isetan_Salone/isetan_01.jpg|link/Isetan_Salone/isetan_02.jpg|link/Isetan_Salone/isetan_03.jpg|link/Isetan_Salone/isetan_04.jpg">
+            <article class="gallery-item" style="--d:0.05s" data-num="05" data-title="Isetan Salone" data-cat="Photography" data-tags="Corporate,Interior,Space" data-count="4" data-caption="六本木・伊勢丹サローネにて開催されたDAFT about DRAFTのポップアップストアを撮影。<br>上質な空間に宿る光と素材の表情を丁寧に記録した。" data-images="link/Isetan_Salone/isetan_01.jpg|link/Isetan_Salone/isetan_02.jpg|link/Isetan_Salone/isetan_03.jpg|link/Isetan_Salone/isetan_04.jpg">
               <div class="gallery-thumb"><img src="link/Isetan_Salone/isetan_01.jpg" alt="Isetan Salone" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
               <div class="gallery-meta"><p class="gallery-num">05</p><p class="gallery-title">Isetan Salone</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Interior</span><span class="gallery-tag">Space</span></div></div>
             </article>
-            <article class="gallery-item" style="--d:0.06s" data-num="06" data-title="Staff Portrait" data-cat="Photography" data-tags="Corporate,Portrait" data-count="17" data-caption="DRAFT inc.の社員を6年間で200名超を撮影。(一部抜粋)<br>プロフィール写真・コンペ資料などに活用される。" data-images="link/portrait/portrait_01.jpg|link/portrait/portrait_02.jpg|link/portrait/portrait_03.jpg|link/portrait/portrait_04.jpg|link/portrait/portrait_05.jpg|link/portrait/portrait_06.jpg|link/portrait/portrait_07.jpg|link/portrait/portrait_08.jpg|link/portrait/portrait_09.jpg|link/portrait/portrait_10.jpg|link/portrait/portrait_11.jpg|link/portrait/portrait_12.jpg|link/portrait/portrait_13.jpg|link/portrait/portrait_14.jpg|link/portrait/portrait_15.jpg|link/portrait/portrait_16.jpg|link/portrait/portrait_17.jpg">
-              <div class="gallery-thumb"><img src="link/portrait/portrait_01.jpg" alt="Staff Portrait" style="width:100%;height:100%;object-fit:cover;"><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
+            <article class="gallery-item" style="--d:0.06s" data-num="06" data-title="Staff Portrait" data-cat="Photography" data-tags="Corporate,Portrait" data-count="20" data-caption="DRAFT inc.の社員を6年間で200名超を撮影。(一部抜粋)<br>プロフィール写真・コンペ資料などに活用される。" data-images="link/portrait/portrait_01.jpg|link/portrait/portrait_29.jpg|link/portrait/portrait_03.jpg|link/portrait/portrait_07.jpg|link/portrait/portrait_17.jpg|link/portrait/portrait_22.jpg|link/portrait/portrait_40.jpg|link/portrait/portrait_09.jpg|link/portrait/portrait_18.jpg|link/portrait/portrait_10.jpg|link/portrait/portrait_30.jpg|link/portrait/portrait_26.jpg|link/portrait/portrait_12.jpg|link/portrait/portrait_02.jpg|link/portrait/portrait_27.jpg|link/portrait/portrait_08.jpg|link/portrait/portrait_31.jpg|link/portrait/portrait_25.jpg|link/portrait/portrait_23.jpg|link/portrait/portrait_28.jpg">
+              <div class="gallery-thumb" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;">
+                <img src="link/portrait/portrait_01.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <img src="link/portrait/portrait_07.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <img src="link/portrait/portrait_17.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <img src="link/portrait/portrait_09.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div>
+              </div>
               <div class="gallery-meta"><p class="gallery-num">06</p><p class="gallery-title">Staff Portrait</p><div class="gallery-tags"><span class="gallery-tag">Corporate</span><span class="gallery-tag">Portrait</span></div></div>
             </article>
 
-            <article class="gallery-item" style="--d:0.06s" data-num="02" data-title="Photo Title 02" data-cat="Photography" data-tags="Portrait" data-count="5">
-              <div class="gallery-thumb"><span class="ph"></span><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">02</p><p class="gallery-title">Photo Title 02</p><div class="gallery-tags"><span class="gallery-tag">Portrait</span></div></div>
-            </article>
-
-            <article class="gallery-item" style="--d:0.12s" data-num="03" data-title="Photo Title 03" data-cat="Photography" data-tags="Space" data-count="5">
-              <div class="gallery-thumb"><span class="ph"></span><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">03</p><p class="gallery-title">Photo Title 03</p><div class="gallery-tags"><span class="gallery-tag">Space</span></div></div>
-            </article>
-
-            <article class="gallery-item" style="--d:0.00s" data-num="04" data-title="Photo Title 04" data-cat="Photography" data-tags="Space" data-count="5">
-              <div class="gallery-thumb"><span class="ph"></span><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
-              <div class="gallery-meta"><p class="gallery-num">04</p><p class="gallery-title">Photo Title 04</p><div class="gallery-tags"><span class="gallery-tag">Space</span></div></div>
-            </article>
 
 
           </div>
@@ -807,10 +799,25 @@
       </section>
     </div>
 
+    <!-- ─── View: All Works ────────────────────────────────────────────────── -->
+    <div id="view-all" class="view">
+      <section id="all-works">
+        <div class="filter-bar" id="all-filter"></div>
+        <div id="all-design-wrap" class="all-wrap">
+          <p class="all-section-label">Graphics</p>
+          <div class="works-grid" id="all-design-grid"></div>
+        </div>
+        <div id="all-photo-wrap" class="all-wrap">
+          <p class="all-section-label">Photography</p>
+          <div class="gallery-grid" id="all-photo-grid"></div>
+        </div>
+      </section>
+    </div>
+
   </main>
 
   <nav id="site-nav" aria-label="Main navigation">
-    <a href="#" id="nav-about">About</a>
+    <a href="#" id="nav-about">Biography</a>
     <a href="#" id="nav-design">Graphics</a>
     <a href="#" id="nav-photography">Photography</a>
     <a href="#" class="nav-contact" id="nav-contact">Contact</a>
@@ -946,6 +953,7 @@
       hero:        document.getElementById('view-hero'),
       design:      document.getElementById('view-design'),
       photography: document.getElementById('view-photography'),
+      all:         document.getElementById('view-all'),
     };
     const navLinks = {
       design:      document.getElementById('nav-design'),
@@ -1010,31 +1018,47 @@
     const woThumbs     = document.getElementById('wo-thumbs');
     let wIdx = 0, wTotal = 0, wImages = [];
 
-    function goWork(i) {
+    function goWork(i, noFade) {
       wIdx = i;
       document.querySelectorAll('.work-overlay-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
       woThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
       document.getElementById('wo-prev').disabled = i === 0;
       document.getElementById('wo-next').disabled = i === wTotal - 1;
       const woMain = document.getElementById('wo-main');
-      if (wImages[i]) {
-        const img = new Image();
-        img.alt = '';
-        img.onload = () => {
-          if (img.naturalHeight > img.naturalWidth) {
-            img.style.width = 'auto'; img.style.height = '100%';
-          }
-        };
-        img.src = wImages[i];
-        woMain.innerHTML = '';
-        woMain.appendChild(img);
-      } else {
-        woMain.innerHTML = '<span class="ph"></span>';
+      function swapImage() {
+        if (wImages[i]) {
+          const img = new Image();
+          img.alt = '';
+          img.onload = () => {
+            if (img.naturalHeight > img.naturalWidth) {
+              img.style.width = 'auto'; img.style.height = '100%';
+              img.style.display = 'block'; img.style.margin = '0 auto';
+            }
+            woMain.innerHTML = '';
+            woMain.appendChild(img);
+            woMain.style.opacity = '1';
+          };
+          img.src = wImages[i];
+        } else {
+          woMain.innerHTML = '<span class="ph"></span>';
+          woMain.style.opacity = '1';
+        }
+      }
+      if (noFade) { swapImage(); return; }
+      woMain.style.opacity = '0';
+      setTimeout(swapImage, 240);
+    }
+    function fitTitle(el, maxPx = 28, minPx = 10) {
+      el.style.fontSize = maxPx + 'px';
+      while (el.scrollWidth > el.offsetWidth && parseFloat(el.style.fontSize) > minPx) {
+        el.style.fontSize = (parseFloat(el.style.fontSize) - 0.5) + 'px';
       }
     }
+
     function openWork(item) {
       document.getElementById('wo-num').textContent        = item.dataset.num     || '';
       document.getElementById('wo-title').textContent      = item.dataset.title   || '';
+      fitTitle(document.getElementById('wo-title'));
       document.getElementById('wo-caption-body').innerHTML = item.dataset.caption || '';
       const tagsEl = document.getElementById('wo-tags');
       tagsEl.innerHTML = '';
@@ -1043,6 +1067,7 @@
         s.className = 'work-overlay-tag'; s.textContent = t.trim();
         tagsEl.appendChild(s);
       });
+      document.getElementById('wo-main').style.background = item.dataset.bg === 'dark' ? 'var(--text)' : '';
       wImages = item.dataset.images ? item.dataset.images.split('|') : [];
       wTotal = wImages.length || parseInt(item.dataset.count || '4');
       woThumbs.innerHTML = '';
@@ -1055,7 +1080,7 @@
         th.addEventListener('click', () => goWork(i));
         woThumbs.appendChild(th);
       }
-      goWork(0);
+      goWork(0, true);
       workOverlay.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -1066,6 +1091,15 @@
     document.getElementById('wo-next').addEventListener('click', () => { if (wIdx < wTotal - 1) goWork(wIdx + 1); });
     document.getElementById('work-overlay-close').addEventListener('click', closeWork);
     workBackdrop.addEventListener('click', closeWork);
+    (function() {
+      let cooldown = false;
+      woThumbs.addEventListener('wheel', e => {
+        e.preventDefault();
+        if (cooldown) return;
+        if (e.deltaY < 0 && wIdx < wTotal - 1) { goWork(wIdx + 1); cooldown = true; setTimeout(() => cooldown = false, 520); }
+        else if (e.deltaY > 0 && wIdx > 0)     { goWork(wIdx - 1); cooldown = true; setTimeout(() => cooldown = false, 520); }
+      }, { passive: false });
+    })();
 
     // ── Photo overlay ──────────────────────────────────────────────────────
     const photoOverlay  = document.getElementById('photo-overlay');
@@ -1073,31 +1107,45 @@
     const poThumbs      = document.getElementById('po-thumbs');
     let pIdx = 0, pTotal = 0, pImages = [];
 
-    function goPhoto(i) {
+    function goPhoto(i, noFade) {
       pIdx = i;
       document.querySelectorAll('.photo-overlay-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
       poThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
       document.getElementById('po-prev').disabled = i === 0;
       document.getElementById('po-next').disabled = i === pTotal - 1;
       const poMain = document.getElementById('po-main');
-      if (pImages[i]) {
-        const img = new Image();
-        img.alt = '';
-        img.onload = () => {
-          if (img.naturalHeight > img.naturalWidth) {
-            img.style.width = 'auto'; img.style.height = '100%';
-          }
-        };
-        img.src = pImages[i];
-        poMain.innerHTML = '';
-        poMain.appendChild(img);
-      } else {
-        poMain.innerHTML = '<span class="ph"></span>';
+      function swapImage() {
+        if (pImages[i]) {
+          const img = new Image();
+          img.alt = '';
+          img.onload = () => {
+            if (img.naturalHeight > img.naturalWidth) {
+              img.style.width = 'auto'; img.style.height = '100%';
+              poMain.style.flex = '1 1 0';
+            } else {
+              img.style.width = '100%'; img.style.height = 'auto';
+              const panelW = poMain.offsetWidth;
+              const fitH = Math.round(panelW * img.naturalHeight / img.naturalWidth);
+              poMain.style.flex = `0 0 ${fitH}px`;
+            }
+            poMain.innerHTML = '';
+            poMain.appendChild(img);
+            poMain.style.opacity = '1';
+          };
+          img.src = pImages[i];
+        } else {
+          poMain.innerHTML = '<span class="ph"></span>';
+          poMain.style.opacity = '1';
+        }
       }
+      if (noFade) { swapImage(); return; }
+      poMain.style.opacity = '0';
+      setTimeout(swapImage, 240);
     }
     function openPhoto(item) {
       document.getElementById('photo-overlay-num').textContent   = item.dataset.num   || '';
       document.getElementById('photo-overlay-title').textContent = item.dataset.title || '';
+      fitTitle(document.getElementById('photo-overlay-title'));
       document.getElementById('photo-overlay-cat').textContent   = item.dataset.cat   || '';
       document.getElementById('po-caption-body').innerHTML       = item.dataset.caption || '';
       pImages = item.dataset.images ? item.dataset.images.split('|') : [];
@@ -1112,7 +1160,7 @@
         th.addEventListener('click', () => goPhoto(i));
         poThumbs.appendChild(th);
       }
-      goPhoto(0);
+      goPhoto(0, true);
       photoOverlay.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -1123,6 +1171,95 @@
     document.getElementById('po-next').addEventListener('click', () => { if (pIdx < pTotal - 1) goPhoto(pIdx + 1); });
     document.getElementById('photo-overlay-close').addEventListener('click', closePhoto);
     photoBackdrop.addEventListener('click', closePhoto);
+    (function() {
+      let cooldown = false;
+      poThumbs.addEventListener('wheel', e => {
+        e.preventDefault();
+        if (cooldown) return;
+        if (e.deltaY < 0 && pIdx < pTotal - 1) { goPhoto(pIdx + 1); cooldown = true; setTimeout(() => cooldown = false, 520); }
+        else if (e.deltaY > 0 && pIdx > 0)     { goPhoto(pIdx - 1); cooldown = true; setTimeout(() => cooldown = false, 520); }
+      }, { passive: false });
+    })();
+
+    // ── All Works helpers ─────────────────────────────────────────────────
+    function makeAllCard(item, isWork) {
+      const d = item.dataset;
+      const thumb = d.images ? d.images.split('|')[0] : '';
+      const card = document.createElement('article');
+      card.className = isWork ? 'work-item' : 'gallery-item';
+      Object.entries(d).forEach(([k, v]) => card.dataset[k] = v);
+      card.innerHTML = isWork
+        ? `<div class="work-thumb">
+            ${thumb ? `<img src="${thumb}" alt="${d.title||''}" style="width:100%;height:100%;object-fit:cover;">` : '<span class="ph"></span>'}
+            <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+          </div>
+          <div class="work-meta">
+            <p class="work-num">${d.num||''}</p>
+            <p class="work-title">${d.title||''}</p>
+            <div class="work-tags">${(d.tags||'').split(',').map(t=>`<span class="work-tag">${t.trim()}</span>`).join('')}</div>
+          </div>`
+        : `<div class="gallery-thumb">
+            ${thumb ? `<img src="${thumb}" alt="${d.title||''}" style="width:100%;height:100%;object-fit:cover;">` : '<span class="ph"></span>'}
+            <div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div>
+          </div>
+          <div class="gallery-meta">
+            <p class="gallery-num">${d.num||''}</p>
+            <p class="gallery-title">${d.title||''}</p>
+            <div class="gallery-tags">${(d.tags||'').split(',').map(t=>`<span class="gallery-tag">${t.trim()}</span>`).join('')}</div>
+          </div>`;
+      card.addEventListener('click', () => isWork ? openWork(card) : openPhoto(card));
+      return card;
+    }
+
+    function populateAllGrid(tag) {
+      const dGrid = document.getElementById('all-design-grid');
+      const pGrid = document.getElementById('all-photo-grid');
+      const dWrap = document.getElementById('all-design-wrap');
+      const pWrap = document.getElementById('all-photo-wrap');
+      dGrid.innerHTML = ''; pGrid.innerHTML = '';
+      document.querySelectorAll('#design .work-item').forEach(item => {
+        const tags = (item.dataset.tags || '').split(',').map(t => t.trim());
+        if (!tag || tags.includes(tag)) dGrid.appendChild(makeAllCard(item, true));
+      });
+      document.querySelectorAll('#photography .gallery-item').forEach(item => {
+        const tags = (item.dataset.tags || '').split(',').map(t => t.trim());
+        if (!tag || tags.includes(tag)) pGrid.appendChild(makeAllCard(item, false));
+      });
+      dWrap.style.display = dGrid.children.length ? '' : 'none';
+      pWrap.style.display = pGrid.children.length ? '' : 'none';
+    }
+
+    function buildAllFilterBar(activeTag) {
+      const bar = document.getElementById('all-filter');
+      const tags = new Set();
+      document.querySelectorAll('#design .work-item, #photography .gallery-item').forEach(item =>
+        (item.dataset.tags || '').split(',').forEach(t => tags.add(t.trim()))
+      );
+      bar.innerHTML = '';
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn' + (activeTag ? '' : ' active');
+      allBtn.dataset.filter = 'all';
+      allBtn.textContent = 'All';
+      allBtn.addEventListener('click', () => {
+        bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+        populateAllGrid(null);
+      });
+      bar.appendChild(allBtn);
+      [...tags].sort().forEach(tag => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn' + (tag === activeTag ? ' active' : '');
+        btn.dataset.filter = tag;
+        btn.textContent = tag;
+        btn.addEventListener('click', () => {
+          const isActive = btn.classList.contains('active');
+          bar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          if (isActive) { allBtn.classList.add('active'); populateAllGrid(null); }
+          else           { btn.classList.add('active');   populateAllGrid(tag);  }
+        });
+        bar.appendChild(btn);
+      });
+    }
 
     // ── Filter bars ───────────────────────────────────────────────────────
     function setupFilter(barId, itemSelector) {
