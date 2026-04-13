@@ -635,6 +635,28 @@
       transition: background var(--dur-fast), color var(--dur-fast);
     }
     .contact-submit:hover { background: var(--text); color: var(--bg); }
+    .contact-confirm { display: flex; flex-direction: column; gap: var(--s4); }
+    .contact-review { display: flex; flex-direction: column; gap: var(--s4); }
+    .contact-review-val {
+      font-family: var(--body); font-size: 0.875rem; color: var(--text);
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+      white-space: pre-wrap; line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    .contact-confirm-btns { display: flex; gap: var(--s3); margin-top: var(--s2); }
+    .contact-back {
+      background: none; border: 1px solid var(--border); padding: 0.65rem 1.5rem;
+      font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); cursor: pointer;
+      transition: color var(--dur-fast);
+    }
+    .contact-back:hover { color: var(--text); }
+    .contact-send {
+      background: none; border: 1px solid var(--border); padding: 0.65rem 1.5rem;
+      font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--text); cursor: pointer;
+      transition: background var(--dur-fast), color var(--dur-fast);
+    }
+    .contact-send:hover { background: var(--text); color: var(--bg); }
 
     /* ─── Responsive ─────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
@@ -924,8 +946,10 @@
     <div class="contact-backdrop" id="contact-backdrop"></div>
     <div class="contact-panel">
       <button class="contact-close" id="contact-close" aria-label="Close">Close ✕</button>
-      <p class="contact-heading">Contact</p>
-      <form class="contact-form" id="contact-form" action="https://formspree.io/f/mnjlqqlr" method="POST">
+      <p class="contact-heading" id="contact-heading">Contact</p>
+
+      <!-- Step 1: Form -->
+      <form class="contact-form" id="contact-form">
         <div class="contact-field">
           <label class="contact-label" for="c-name">Name</label>
           <input class="contact-input" id="c-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
@@ -939,8 +963,30 @@
           <textarea class="contact-textarea" id="c-message" name="message" placeholder="Tell me about your project…" required></textarea>
         </div>
         <button class="contact-submit" type="submit">Send →</button>
-        <p class="contact-thanks" id="contact-thanks" style="display:none;">送信しました。ありがとうございます。</p>
       </form>
+
+      <!-- Step 2: Confirm -->
+      <div class="contact-confirm" id="contact-confirm" style="display:none;">
+        <div class="contact-review">
+          <div class="contact-field">
+            <span class="contact-label">Name</span>
+            <span class="contact-review-val" id="cr-name"></span>
+          </div>
+          <div class="contact-field">
+            <span class="contact-label">Email</span>
+            <span class="contact-review-val" id="cr-email"></span>
+          </div>
+          <div class="contact-field">
+            <span class="contact-label">Message</span>
+            <span class="contact-review-val" id="cr-message"></span>
+          </div>
+        </div>
+        <div class="contact-confirm-btns" id="contact-confirm-btns">
+          <button class="contact-back" id="contact-back">← Edit</button>
+          <button class="contact-send" id="contact-send">Send →</button>
+        </div>
+        <p class="contact-thanks" id="contact-thanks" style="display:none;">送信しました。ありがとうございます。</p>
+      </div>
     </div>
   </div>
 
@@ -1301,28 +1347,53 @@
     // ── Contact overlay ────────────────────────────────────────────────────
     const contactOverlay  = document.getElementById('contact-overlay');
     const contactBackdrop = document.getElementById('contact-backdrop');
+    function resetContact() {
+      document.getElementById('contact-form').style.display = '';
+      document.getElementById('contact-confirm').style.display = 'none';
+      document.getElementById('contact-thanks').style.display = 'none';
+      document.getElementById('contact-confirm-btns').style.display = '';
+      document.getElementById('contact-send').textContent = 'Send →';
+      document.getElementById('contact-send').disabled = false;
+      document.getElementById('contact-heading').textContent = 'Contact';
+    }
     function openContact(e) { e.preventDefault(); contactOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeContact() { contactOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+    function closeContact() { contactOverlay.classList.remove('open'); document.body.style.overflow = ''; resetContact(); }
     document.getElementById('nav-contact').addEventListener('click', openContact);
     document.getElementById('contact-close').addEventListener('click', closeContact);
     contactBackdrop.addEventListener('click', closeContact);
 
-    // ── Contact form submit (Formspree) ───────────────────────────────────
-    document.getElementById('contact-form').addEventListener('submit', async e => {
+    // ── Contact form: Step 1 → Step 2 (review) ───────────────────────────
+    document.getElementById('contact-form').addEventListener('submit', e => {
       e.preventDefault();
-      const form = e.target;
-      const btn  = form.querySelector('.contact-submit');
+      document.getElementById('cr-name').textContent    = document.getElementById('c-name').value;
+      document.getElementById('cr-email').textContent   = document.getElementById('c-email').value;
+      document.getElementById('cr-message').textContent = document.getElementById('c-message').value;
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('contact-confirm').style.display = '';
+      document.getElementById('contact-heading').textContent = 'Confirm';
+    });
+
+    // ── Contact form: Back ────────────────────────────────────────────────
+    document.getElementById('contact-back').addEventListener('click', () => {
+      document.getElementById('contact-confirm').style.display = 'none';
+      document.getElementById('contact-form').style.display = '';
+      document.getElementById('contact-heading').textContent = 'Contact';
+    });
+
+    // ── Contact form: Send (Formspree) ────────────────────────────────────
+    document.getElementById('contact-send').addEventListener('click', async () => {
+      const btn = document.getElementById('contact-send');
       btn.textContent = 'Sending…';
       btn.disabled = true;
       try {
-        const res = await fetch(form.action, {
+        const res = await fetch('https://formspree.io/f/mnjlqqlr', {
           method: 'POST',
-          body: new FormData(form),
+          body: new FormData(document.getElementById('contact-form')),
           headers: { 'Accept': 'application/json' }
         });
         if (res.ok) {
-          form.reset();
-          btn.style.display = 'none';
+          document.getElementById('contact-form').reset();
+          document.getElementById('contact-confirm-btns').style.display = 'none';
           document.getElementById('contact-thanks').style.display = '';
         } else {
           btn.textContent = 'Send →';
