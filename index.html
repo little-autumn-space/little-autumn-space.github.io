@@ -962,7 +962,7 @@
           <label class="contact-label" for="c-message">Message</label>
           <textarea class="contact-textarea" id="c-message" name="message" placeholder="Tell me about your project…" required></textarea>
         </div>
-        <button class="contact-submit" type="submit">Send →</button>
+        <button class="contact-submit" type="submit">Review →</button>
       </form>
 
       <!-- Step 2: Confirm -->
@@ -1363,11 +1363,17 @@
     contactBackdrop.addEventListener('click', closeContact);
 
     // ── Contact form: Step 1 → Step 2 (review) ───────────────────────────
+    let _cSaved = {};
     document.getElementById('contact-form').addEventListener('submit', e => {
       e.preventDefault();
-      document.getElementById('cr-name').textContent    = document.getElementById('c-name').value;
-      document.getElementById('cr-email').textContent   = document.getElementById('c-email').value;
-      document.getElementById('cr-message').textContent = document.getElementById('c-message').value;
+      _cSaved = {
+        name:    document.getElementById('c-name').value,
+        email:   document.getElementById('c-email').value,
+        message: document.getElementById('c-message').value
+      };
+      document.getElementById('cr-name').textContent    = _cSaved.name;
+      document.getElementById('cr-email').textContent   = _cSaved.email;
+      document.getElementById('cr-message').textContent = _cSaved.message;
       document.getElementById('contact-form').style.display = 'none';
       document.getElementById('contact-confirm').style.display = '';
       document.getElementById('contact-heading').textContent = 'Confirm';
@@ -1375,6 +1381,9 @@
 
     // ── Contact form: Back ────────────────────────────────────────────────
     document.getElementById('contact-back').addEventListener('click', () => {
+      document.getElementById('c-name').value    = _cSaved.name    || '';
+      document.getElementById('c-email').value   = _cSaved.email   || '';
+      document.getElementById('c-message').value = _cSaved.message || '';
       document.getElementById('contact-confirm').style.display = 'none';
       document.getElementById('contact-form').style.display = '';
       document.getElementById('contact-heading').textContent = 'Contact';
