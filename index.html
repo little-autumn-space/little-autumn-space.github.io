@@ -925,20 +925,21 @@
     <div class="contact-panel">
       <button class="contact-close" id="contact-close" aria-label="Close">Close ✕</button>
       <p class="contact-heading">Contact</p>
-      <form class="contact-form" onsubmit="return false;">
+      <form class="contact-form" id="contact-form" action="https://formspree.io/f/mnjlqqlr" method="POST">
         <div class="contact-field">
           <label class="contact-label" for="c-name">Name</label>
-          <input class="contact-input" id="c-name" type="text" placeholder="Your name" autocomplete="name">
+          <input class="contact-input" id="c-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
         </div>
         <div class="contact-field">
           <label class="contact-label" for="c-email">Email</label>
-          <input class="contact-input" id="c-email" type="email" placeholder="your@email.com" autocomplete="email">
+          <input class="contact-input" id="c-email" name="email" type="email" placeholder="your@email.com" autocomplete="email" required>
         </div>
         <div class="contact-field">
           <label class="contact-label" for="c-message">Message</label>
-          <textarea class="contact-textarea" id="c-message" placeholder="Tell me about your project…"></textarea>
+          <textarea class="contact-textarea" id="c-message" name="message" placeholder="Tell me about your project…" required></textarea>
         </div>
         <button class="contact-submit" type="submit">Send →</button>
+        <p class="contact-thanks" id="contact-thanks" style="display:none;">送信しました。ありがとうございます。</p>
       </form>
     </div>
   </div>
@@ -1305,6 +1306,35 @@
     document.getElementById('nav-contact').addEventListener('click', openContact);
     document.getElementById('contact-close').addEventListener('click', closeContact);
     contactBackdrop.addEventListener('click', closeContact);
+
+    // ── Contact form submit (Formspree) ───────────────────────────────────
+    document.getElementById('contact-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const btn  = form.querySelector('.contact-submit');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          form.reset();
+          btn.style.display = 'none';
+          document.getElementById('contact-thanks').style.display = '';
+        } else {
+          btn.textContent = 'Send →';
+          btn.disabled = false;
+          alert('送信に失敗しました。しばらく経ってから再度お試しください。');
+        }
+      } catch {
+        btn.textContent = 'Send →';
+        btn.disabled = false;
+        alert('送信に失敗しました。しばらく経ってから再度お試しください。');
+      }
+    });
 
     // ── Keyboard navigation ───────────────────────────────────────────────
     document.addEventListener('keydown', e => {
