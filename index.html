@@ -1356,8 +1356,8 @@
       document.getElementById('contact-send').disabled = false;
       document.getElementById('contact-heading').textContent = 'Contact';
     }
-    function openContact(e) { e.preventDefault(); contactOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeContact() { contactOverlay.classList.remove('open'); document.body.style.overflow = ''; resetContact(); }
+    function openContact(e) { e.preventDefault(); resetContact(); contactOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeContact() { contactOverlay.classList.remove('open'); document.body.style.overflow = ''; }
     document.getElementById('nav-contact').addEventListener('click', openContact);
     document.getElementById('contact-close').addEventListener('click', closeContact);
     contactBackdrop.addEventListener('click', closeContact);
