@@ -154,13 +154,14 @@
       from { clip-path: inset(-60% 100% -60% 0%); }
       to   { clip-path: inset(-60% 0%   -60% 0%); }
     }
-    .hero-title span {
+    .hero-title > span {
       display: block; opacity: 1; transform: none; transition: none;
       clip-path: inset(-60% 100% -60% 0%);
     }
-    body.ready .hero-title span:nth-child(1) { animation: brushReveal 2.3s var(--ease) 0.0s both; }
-    body.ready .hero-title span:nth-child(2) { animation: brushReveal 2.3s var(--ease) 0.8s both; }
-    body.ready .hero-title span:nth-child(3) { animation: brushReveal 2.3s var(--ease) 1.6s both; }
+    body.ready .hero-title > span:nth-child(1) { animation: brushReveal 2.3s var(--ease) 0.0s both; }
+    body.ready .hero-title > span:nth-child(2) { animation: brushReveal 2.3s var(--ease) 0.8s both; }
+    body.ready .hero-title > span:nth-child(3) { animation: brushReveal 2.3s var(--ease) 1.6s both; }
+    .hero-title i { font-style: normal; letter-spacing: 0.04em; }
 
 
     /* ─── Section Header ─────────────────────────────────────────────────── */
@@ -687,9 +688,9 @@
     <div id="view-hero" class="view active">
       <section id="hero">
         <h1 class="hero-title" aria-label="Little Autumn Space">
-          <span>Little</span>
-          <span>Autumn</span>
-          <span>Space</span>
+          <span>Li<i>t</i>tle</span>
+          <span>Au<i>t</i>umn</span>
+          <span><i>S</i><i>p</i>ace</span>
         </h1>
       </section>
     </div>
