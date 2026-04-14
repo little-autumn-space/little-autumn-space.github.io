@@ -178,11 +178,13 @@
       padding: clamp(3rem, 7svh, 6rem) var(--s4) clamp(4rem, 11svh, 9rem);
     }
     .hero-title {
-      font-family: var(--serif);
-      font-size: clamp(4rem, 13vw, min(13rem, 26svh));
-      font-weight: 100;
-      line-height: 1.0;
-      letter-spacing: -0.025em;
+      width: min(90vw, 1100px);
+      color: var(--text);
+    }
+    .hero-title > span svg {
+      display: block;
+      width: 100%;
+      height: auto;
     }
     /* ── Hero animation (brush reveal) ───────────────────────────────────── */
     @keyframes brushReveal {
@@ -190,7 +192,7 @@
       to   { clip-path: inset(-60% 0%   -60% 0%); }
     }
     .hero-title > span {
-      display: block; opacity: 1; transform: none; transition: none;
+      display: block; width: 100%; line-height: 0;
       clip-path: inset(-60% 100% -60% 0%);
     }
     body.ready .hero-title > span:nth-child(1) { animation: brushReveal 2.3s var(--ease) 0.0s both; }
