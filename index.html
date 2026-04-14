@@ -5,16 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Little Autumn Space</title>
+  <!-- DNS prefetch (wider browser support) + preconnect (faster TLS handshake) -->
+  <link rel="dns-prefetch" href="https://use.typekit.net">
   <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="dns-prefetch" href="https://p.typekit.net">
   <link rel="preconnect" href="https://p.typekit.net" crossorigin>
+  <!-- Preload the Typekit script itself so it's in cache when injected dynamically -->
+  <link rel="preload" href="https://use.typekit.net/vnw5jnx.js" as="script" crossorigin>
   <script>
+    // _markReady: single entry point — called by Typekit callbacks or fallbacks.
+    // Waits for document.fonts.ready AFTER Typekit has injected @font-face rules,
+    // so fonts.ready reflects the actual webfont load state (no race condition).
+    var _ready = false;
+    function _markReady() {
+      if (_ready) return;
+      _ready = true;
+      document.fonts.ready.then(function() {
+        requestAnimationFrame(function() { document.body.classList.add('ready'); });
+      });
+    }
+
     (function(d) {
       var config = {
         kitId: 'vnw5jnx',
         scriptTimeout: 3000,
-        async: true
+        async: true,
+        active:   _markReady,   // fonts loaded — @font-face injection complete
+        inactive: _markReady    // fonts failed  — animate anyway with fallback
       },
-      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+      h=d.documentElement,
+      t=setTimeout(function(){ h.className=h.className.replace(/\bwf-loading\b/g,'')+" wf-inactive"; _markReady(); }, config.scriptTimeout),
+      tk=d.createElement('script'),f=false,s=d.getElementsByTagName('script')[0],a;
+      h.className+=' wf-loading';
+      tk.src='https://use.typekit.net/'+config.kitId+'.js';
+      tk.async=true;
+      tk.onerror=_markReady;
+      tk.onload=tk.onreadystatechange=function(){
+        a=this.readyState;
+        if(f||a&&a!='complete'&&a!='loaded')return;
+        f=true; clearTimeout(t);
+        try{ Typekit.load(config); }catch(e){ _markReady(); }
+      };
+      s.parentNode.insertBefore(tk,s);
     })(document);
   </script>
   <style>
@@ -993,11 +1025,9 @@
   </div>
 
   <script>
-    // fonts.ready fires as soon as webfonts load — no need to wait for images
-    Promise.race([
-      document.fonts.ready,
-      new Promise(r => setTimeout(r, 1500))  // fallback if fonts time out
-    ]).then(() => requestAnimationFrame(() => document.body.classList.add('ready')));
+    // Absolute safety net: if Typekit script was blocked entirely (e.g. ad blocker),
+    // _markReady was never called — force-start animation after 3s.
+    setTimeout(function() { _markReady(); }, 3000);
 
     // ── View switching ─────────────────────────────────────────────────────
     const views = {
