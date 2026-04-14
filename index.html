@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Little Autumn Space</title>
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin>
   <script>
     (function(d) {
       var config = {
@@ -991,9 +993,11 @@
   </div>
 
   <script>
-    window.addEventListener('load', () => {
-      requestAnimationFrame(() => document.body.classList.add('ready'));
-    });
+    // fonts.ready fires as soon as webfonts load — no need to wait for images
+    Promise.race([
+      document.fonts.ready,
+      new Promise(r => setTimeout(r, 1500))  // fallback if fonts time out
+    ]).then(() => requestAnimationFrame(() => document.body.classList.add('ready')));
 
     // ── View switching ─────────────────────────────────────────────────────
     const views = {
@@ -1063,6 +1067,31 @@
     function webpSrc(jpg, size) { return jpg.replace(/\.jpg$/, '_' + size + '.webp'); }
     function isMobile() { return window.innerWidth <= 768; }
 
+    // ── Overlay shared utilities ──────────────────────────────────────────
+    function fadeSwap(mainEl, noFade, swapFn) {
+      if (noFade) { swapFn(); return; }
+      mainEl.style.opacity = '0';
+      setTimeout(swapFn, 240);
+    }
+    function syncNav(thumbClass, prevBtn, nextBtn, i, total, thumbsEl) {
+      document.querySelectorAll(thumbClass).forEach((th, j) => th.classList.toggle('active', j === i));
+      thumbsEl.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
+      prevBtn.disabled = i === 0;
+      nextBtn.disabled = i === total - 1;
+    }
+    function buildThumbs(images, total, thumbsEl, thumbClass, goFn) {
+      thumbsEl.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const th = document.createElement('div');
+        th.className = thumbClass;
+        th.innerHTML = images[i]
+          ? `<img src="${webpSrc(images[i], '800')}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`
+          : '<span class="ph"></span>';
+        th.addEventListener('click', () => goFn(i));
+        thumbsEl.appendChild(th);
+      }
+    }
+
     // ── Work overlay ──────────────────────────────────────────────────────
     const workOverlay  = document.getElementById('work-overlay');
     const workBackdrop = document.getElementById('work-backdrop');
@@ -1071,33 +1100,23 @@
 
     function goWork(i, noFade) {
       wIdx = i;
-      document.querySelectorAll('.work-overlay-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
-      woThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
-      document.getElementById('wo-prev').disabled = i === 0;
-      document.getElementById('wo-next').disabled = i === wTotal - 1;
+      syncNav('.work-overlay-thumb', document.getElementById('wo-prev'), document.getElementById('wo-next'), i, wTotal, woThumbs);
       const woMain = document.getElementById('wo-main');
-      function swapImage() {
-        if (wImages[i]) {
-          const img = new Image();
-          img.alt = '';
-          img.onload = () => {
-            if (img.naturalHeight > img.naturalWidth) {
-              img.style.width = 'auto'; img.style.height = '100%';
-              img.style.display = 'block'; img.style.margin = '0 auto';
-            }
-            woMain.innerHTML = '';
-            woMain.appendChild(img);
-            woMain.style.opacity = '1';
-          };
-          img.src = webpSrc(wImages[i], isMobile() ? '800' : '1600');
-        } else {
-          woMain.innerHTML = '<span class="ph"></span>';
+      fadeSwap(woMain, noFade, () => {
+        if (!wImages[i]) { woMain.innerHTML = '<span class="ph"></span>'; woMain.style.opacity = '1'; return; }
+        const img = new Image();
+        img.alt = '';
+        img.onload = () => {
+          if (img.naturalHeight > img.naturalWidth) {
+            img.style.width = 'auto'; img.style.height = '100%';
+            img.style.display = 'block'; img.style.margin = '0 auto';
+          }
+          woMain.innerHTML = '';
+          woMain.appendChild(img);
           woMain.style.opacity = '1';
-        }
-      }
-      if (noFade) { swapImage(); return; }
-      woMain.style.opacity = '0';
-      setTimeout(swapImage, 240);
+        };
+        img.src = webpSrc(wImages[i], isMobile() ? '800' : '1600');
+      });
     }
     function fitTitle(el, maxPx = 28, minPx = 10) {
       el.style.fontSize = maxPx + 'px';
@@ -1121,16 +1140,7 @@
       document.getElementById('wo-main').style.background = item.dataset.bg === 'dark' ? 'var(--text)' : '';
       wImages = item.dataset.images ? item.dataset.images.split('|') : [];
       wTotal = wImages.length || parseInt(item.dataset.count || '4');
-      woThumbs.innerHTML = '';
-      for (let i = 0; i < wTotal; i++) {
-        const th = document.createElement('div');
-        th.className = 'work-overlay-thumb';
-        th.innerHTML = wImages[i]
-          ? `<img src="${webpSrc(wImages[i], '800')}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`
-          : '<span class="ph"></span>';
-        th.addEventListener('click', () => goWork(i));
-        woThumbs.appendChild(th);
-      }
+      buildThumbs(wImages, wTotal, woThumbs, 'work-overlay-thumb', goWork);
       goWork(0, true);
       workOverlay.classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -1160,38 +1170,26 @@
 
     function goPhoto(i, noFade) {
       pIdx = i;
-      document.querySelectorAll('.photo-overlay-thumb').forEach((th, j) => th.classList.toggle('active', j === i));
-      poThumbs.children[i]?.scrollIntoView({ inline: 'nearest', behavior: 'smooth' });
-      document.getElementById('po-prev').disabled = i === 0;
-      document.getElementById('po-next').disabled = i === pTotal - 1;
+      syncNav('.photo-overlay-thumb', document.getElementById('po-prev'), document.getElementById('po-next'), i, pTotal, poThumbs);
       const poMain = document.getElementById('po-main');
-      function swapImage() {
-        if (pImages[i]) {
-          const img = new Image();
-          img.alt = '';
-          img.onload = () => {
-            if (img.naturalHeight > img.naturalWidth) {
-              img.style.width = 'auto'; img.style.height = '100%';
-              poMain.style.flex = '1 1 0';
-            } else {
-              img.style.width = '100%'; img.style.height = 'auto';
-              const panelW = poMain.offsetWidth;
-              const fitH = Math.round(panelW * img.naturalHeight / img.naturalWidth);
-              poMain.style.flex = `0 0 ${fitH}px`;
-            }
-            poMain.innerHTML = '';
-            poMain.appendChild(img);
-            poMain.style.opacity = '1';
-          };
-          img.src = webpSrc(pImages[i], isMobile() ? '800' : '1600');
-        } else {
-          poMain.innerHTML = '<span class="ph"></span>';
+      fadeSwap(poMain, noFade, () => {
+        if (!pImages[i]) { poMain.innerHTML = '<span class="ph"></span>'; poMain.style.opacity = '1'; return; }
+        const img = new Image();
+        img.alt = '';
+        img.onload = () => {
+          if (img.naturalHeight > img.naturalWidth) {
+            img.style.width = 'auto'; img.style.height = '100%';
+            poMain.style.flex = '1 1 0';
+          } else {
+            img.style.width = '100%'; img.style.height = 'auto';
+            poMain.style.flex = `0 0 ${Math.round(poMain.offsetWidth * img.naturalHeight / img.naturalWidth)}px`;
+          }
+          poMain.innerHTML = '';
+          poMain.appendChild(img);
           poMain.style.opacity = '1';
-        }
-      }
-      if (noFade) { swapImage(); return; }
-      poMain.style.opacity = '0';
-      setTimeout(swapImage, 240);
+        };
+        img.src = webpSrc(pImages[i], isMobile() ? '800' : '1600');
+      });
     }
     function openPhoto(item) {
       document.getElementById('photo-overlay-num').textContent   = item.dataset.num   || '';
@@ -1201,16 +1199,7 @@
       document.getElementById('po-caption-body').innerHTML       = item.dataset.caption || '';
       pImages = item.dataset.images ? item.dataset.images.split('|') : [];
       pTotal  = pImages.length || parseInt(item.dataset.count || '5');
-      poThumbs.innerHTML = '';
-      for (let i = 0; i < pTotal; i++) {
-        const th = document.createElement('div');
-        th.className = 'photo-overlay-thumb';
-        th.innerHTML = pImages[i]
-          ? `<img src="${webpSrc(pImages[i], '800')}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">`
-          : '<span class="ph"></span>';
-        th.addEventListener('click', () => goPhoto(i));
-        poThumbs.appendChild(th);
-      }
+      buildThumbs(pImages, pTotal, poThumbs, 'photo-overlay-thumb', goPhoto);
       goPhoto(0, true);
       photoOverlay.classList.add('open');
       document.body.style.overflow = 'hidden';
