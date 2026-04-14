@@ -20,9 +20,10 @@
     function _markReady() {
       if (_ready) return;
       _ready = true;
-      document.fonts.ready.then(function() {
-        requestAnimationFrame(function() { document.body.classList.add('ready'); });
-      });
+      // Typekit active/inactive already guarantees fonts are settled.
+      // Do NOT chain document.fonts.ready here — it waits for ALL @font-face
+      // including heavy CJK fonts, which can take 10+ s on mobile.
+      requestAnimationFrame(function() { document.body.classList.add('ready'); });
     }
 
     (function(d) {
