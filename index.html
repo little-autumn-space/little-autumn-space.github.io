@@ -454,10 +454,10 @@
       position: absolute; top: -2.5rem; right: var(--s3);
       background: none; border: none; cursor: pointer;
       font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted); padding: var(--s1);
+      text-transform: uppercase; color: rgba(247,245,240,0.85); padding: var(--s1);
       z-index: 10; transition: color var(--dur-fast);
     }
-    .work-overlay-close:hover { color: var(--text); }
+    .work-overlay-close:hover { color: #fff; }
     .work-overlay-main {
       flex: 1 1 0; min-height: 0;
       position: relative; background: var(--bg); overflow: hidden;
@@ -509,7 +509,7 @@
       font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
       white-space: nowrap; overflow: hidden;
     }
-    .work-overlay-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
+    .work-overlay-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
     .work-overlay-tag {
       font-family: var(--body); font-size: 0.4375rem;
       letter-spacing: 0.16em; text-transform: uppercase;
@@ -544,10 +544,10 @@
       position: absolute; top: -2.5rem; right: var(--s3);
       background: none; border: none; cursor: pointer;
       font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted); padding: var(--s1);
+      text-transform: uppercase; color: rgba(247,245,240,0.85); padding: var(--s1);
       z-index: 10; transition: color var(--dur-fast);
     }
-    .photo-overlay-close:hover { color: var(--text); }
+    .photo-overlay-close:hover { color: #fff; }
     .photo-overlay-main {
       width: 100%; flex: 1 1 0; min-height: 0;
       overflow: hidden;
@@ -645,10 +645,10 @@
       position: absolute; top: var(--s3); right: var(--s4);
       background: none; border: none; cursor: pointer;
       font-family: var(--sans); font-size: 0.5rem; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted); padding: var(--s1);
+      text-transform: uppercase; color: rgba(247,245,240,0.85); padding: var(--s1);
       transition: color var(--dur-fast);
     }
-    .contact-close:hover { color: var(--text); }
+    .contact-close:hover { color: #fff; }
     .contact-heading {
       font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.5rem);
       font-weight: 700; letter-spacing: -0.025em; line-height: 0.9;
@@ -738,13 +738,16 @@
       <section id="design">
         <div class="section-header">
           <h2 class="page-title">Graphics</h2>
-          <span class="page-count">4 works</span>
+          <span class="page-count">6 works</span>
         </div>
         <div class="filter-bar" id="design-filter">
           <button class="filter-btn active" data-filter="all">All</button>
           <button class="filter-btn" data-filter="Branding">Branding</button>
           <button class="filter-btn" data-filter="Corporate">Corporate</button>
+          <button class="filter-btn" data-filter="Identity">Identity</button>
+          <button class="filter-btn" data-filter="Illustration">Illustration</button>
           <button class="filter-btn" data-filter="Print">Print</button>
+          <button class="filter-btn" data-filter="Stationery">Stationery</button>
         </div>
         <div id="design-works">
           <div class="works-grid">
@@ -797,7 +800,29 @@
               </div>
             </article>
 
+            <article class="work-item" style="--d:0.24s" data-num="05" data-title="Presidential Stationery" data-tags="Identity,Print,Stationery" data-count="3" data-caption="DRAFTの代表が私信に使うレターセットのデザインを担当。銅箔のサインと活版印刷の住所が、送り手の誠実さと品格を体現する。" data-images="link/letter/letter_02.jpg|link/letter/letter_03.jpg|link/letter/letter_01.jpg">
+              <div class="work-thumb">
+                <picture><source srcset="link/letter/letter_01_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/letter/letter_01_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/letter/letter_01.jpg" alt="Presidential Stationery" style="width:100%;height:100%;object-fit:cover;"></picture>
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">05</p>
+                <p class="work-title">Presidential Stationery</p>
+                <div class="work-tags"><span class="work-tag">Identity</span><span class="work-tag">Print</span><span class="work-tag">Stationery</span></div>
+              </div>
+            </article>
 
+            <article class="work-item" style="--d:0.30s" data-num="06" data-title="QUO Card — Shareholder's Gift" data-tags="Identity,Illustration,Print" data-count="3" data-caption="株主優待品のQUOカードと同封レターをデザイン。オリジナルイラストでブランドへの愛着を表現し、株主から「来年も持ち続けたい」と好評を博し、翌年度以降もシリーズとして継続された。" data-images="link/SH/sh_01.jpg|link/SH/sh_02.jpg|link/SH/sh_03.jpg">
+              <div class="work-thumb">
+                <picture><source srcset="link/SH/sh_03_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/SH/sh_03_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/SH/sh_03.jpg" alt="QUO Card — Shareholder's Gift" style="width:100%;height:100%;object-fit:cover;"></picture>
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">06</p>
+                <p class="work-title">QUO Card — Shareholder's Gift</p>
+                <div class="work-tags"><span class="work-tag">Identity</span><span class="work-tag">Illustration</span><span class="work-tag">Print</span></div>
+              </div>
+            </article>
 
           </div>
         </div>

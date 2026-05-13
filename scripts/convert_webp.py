@@ -13,9 +13,26 @@ Original JPEGs are never modified.
 
 import argparse
 import glob
+import io
 import os
 import sys
-from PIL import Image
+from PIL import Image, ImageCms
+
+_SRGB = ImageCms.createProfile('sRGB')
+
+def to_srgb(img):
+    """埋め込み ICC プロファイルを sRGB に変換して返す。プロファイルなし／sRGB の場合はそのまま返す。"""
+    icc = img.info.get('icc_profile')
+    if not icc:
+        return img
+    try:
+        src_profile = ImageCms.ImageCmsProfile(io.BytesIO(icc))
+        desc = ImageCms.getProfileDescription(src_profile).strip().lower()
+        if 'srgb' in desc:
+            return img
+        return ImageCms.profileToProfile(img, src_profile, _SRGB, renderingIntent=0, outputMode='RGB')
+    except Exception:
+        return img
 
 SIZES = [
     ("_800",  800,  78),   # mobile
@@ -36,6 +53,7 @@ def convert(src: str, dry_run: bool, force: bool) -> list[str]:
             generated.append(out)
             continue
         with Image.open(src) as img:
+            img = to_srgb(img)
             w, h = img.size
             if w > max_w:
                 img = img.resize((max_w, round(h * max_w / w)), Image.LANCZOS)
