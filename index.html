@@ -279,7 +279,7 @@
       letter-spacing: 0.14em; color: var(--muted);
       margin-bottom: 0.25rem; font-variant-numeric: tabular-nums;
     }
-    .work-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .work-title { font-family: var(--body); font-size: 0.8125rem; letter-spacing: 0.01em; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: 0.15em; }
     .work-tags { margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .work-tag {
       font-family: var(--body); font-size: 0.4375rem;
@@ -507,7 +507,7 @@
       font-family: var(--serif);
       font-size: 1.2rem;
       font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
-      white-space: nowrap; overflow: hidden;
+      white-space: nowrap; overflow: hidden; padding-bottom: 0.2em;
     }
     .work-overlay-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
     .work-overlay-tag {
@@ -612,7 +612,7 @@
       font-family: var(--serif);
       font-size: 1.2rem;
       font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
-      white-space: nowrap; overflow: hidden;
+      white-space: nowrap; overflow: hidden; padding-bottom: 0.2em;
     }
     .photo-overlay-cat {
       font-family: var(--sans); font-size: 0.5rem;
@@ -738,7 +738,7 @@
       <section id="design">
         <div class="section-header">
           <h2 class="page-title">Graphics</h2>
-          <span class="page-count">6 works</span>
+          <span class="page-count">7 works</span>
         </div>
         <div class="filter-bar" id="design-filter">
           <button class="filter-btn active" data-filter="all">All</button>
@@ -752,7 +752,7 @@
         <div id="design-works">
           <div class="works-grid">
 
-            <article class="work-item" style="--d:0.00s" data-num="01" data-title="TOKYU Philosophy" data-tags="Branding,Illustration" data-count="11" data-caption="渋谷のまちづくりへの想いを伝える東急のブランディングビジュアルPJに参加する。<br>ステッカーイラストレーションを担当。" data-images="link/tokyu/tokyo_01.jpg|link/tokyu/tokyo_02.jpg|link/tokyu/tokyo_03.jpg|link/tokyu/tokyo_04.jpg|link/tokyu/tokyo_05.jpg|link/tokyu/tokyo_06.jpg|link/tokyu/tokyo_07.jpg|link/tokyu/tokyo_08.jpg|link/tokyu/tokyo_09.jpg|link/tokyu/tokyo_10.jpg|link/tokyu/tokyo_11.jpg">
+            <article class="work-item" style="--d:0.00s" data-num="01" data-title="TOKYU Philosophy" data-tags="Branding,Illustration" data-count="11" data-caption="東急の渋谷まちづくりブランディングPJにグラフィックデザイナーとして参加。渋谷の象徴的なモチーフを丁寧に咀嚼し、ステッカーイラストレーションとして昇華させた。" data-images="link/tokyu/tokyo_01.jpg|link/tokyu/tokyo_02.jpg|link/tokyu/tokyo_03.jpg|link/tokyu/tokyo_04.jpg|link/tokyu/tokyo_05.jpg|link/tokyu/tokyo_06.jpg|link/tokyu/tokyo_07.jpg|link/tokyu/tokyo_08.jpg|link/tokyu/tokyo_09.jpg|link/tokyu/tokyo_10.jpg|link/tokyu/tokyo_11.jpg">
               <div class="work-thumb">
                 <picture><source srcset="link/tokyu/tokyo_01_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/tokyu/tokyo_01_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/tokyu/tokyo_01.jpg" alt="TOKYU Philosophy" style="width:100%;height:100%;object-fit:cover;"></picture>
                 <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
@@ -764,7 +764,7 @@
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.06s" data-num="02" data-title="TOKYU Playwork" data-tags="Branding" data-count="8" data-caption="東急のブランディングプロジェクト「Playwork」にデザイナーとして関わる。<br>グラフィックパーツの加工及び制作を担当する。" data-images="link/Playwork/DSC02206.jpg|link/Playwork/DSC02207.jpg|link/Playwork/DSC02218.jpg|link/Playwork/DSC02242.jpg|link/Playwork/DSC02248.jpg|link/Playwork/DSC02278.jpg|link/Playwork/DSC03243.jpg|link/Playwork/DSC03615.jpg">
+            <article class="work-item" style="--d:0.06s" data-num="02" data-title="TOKYU Playwork" data-tags="Branding" data-count="8" data-caption="東急ブランディングプロジェクト「Playwork」にデザイナーとして参加。グラフィックパーツの制作を担い、ブランドビジュアルの精度と一貫性を支えた。" data-images="link/Playwork/DSC02206.jpg|link/Playwork/DSC02207.jpg|link/Playwork/DSC02218.jpg|link/Playwork/DSC02242.jpg|link/Playwork/DSC02248.jpg|link/Playwork/DSC02278.jpg|link/Playwork/DSC03243.jpg|link/Playwork/DSC03615.jpg">
               <div class="work-thumb">
                 <picture><source srcset="link/Playwork/DSC02206_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/Playwork/DSC02206_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/Playwork/DSC02206.jpg" alt="TOKYU Playwork" style="width:100%;height:100%;object-fit:cover;"></picture>
                 <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
@@ -800,27 +800,39 @@
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.24s" data-num="05" data-title="Presidential Stationery" data-tags="Identity,Print,Stationery" data-count="3" data-caption="DRAFTの代表が私信に使うレターセットのデザインを担当。銅箔のサインと活版印刷の住所が、送り手の誠実さと品格を体現する。" data-images="link/letter/letter_02.jpg|link/letter/letter_03.jpg|link/letter/letter_01.jpg">
+            <article class="work-item" style="--d:0.24s" data-num="05" data-title="TJDA Business Card" data-tags="Corporate,Identity,Print" data-count="3" data-caption="DRAFTのトップクリエイティブチーム、山下泰樹建築研究所（TJDA）の名刺をデザイン。余白と素材感でチームの矜持と格を纏わせた一枚に仕上げた。" data-images="link/BC/bc_01.jpg|link/BC/bc_02.jpg|link/BC/bc_03.jpg">
+              <div class="work-thumb">
+                <picture><source srcset="link/BC/bc_03_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/BC/bc_03_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/BC/bc_03.jpg" alt="TJDA Business Card" style="width:100%;height:100%;object-fit:cover;"></picture>
+                <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
+              </div>
+              <div class="work-meta">
+                <p class="work-num">05</p>
+                <p class="work-title">TJDA Business Card</p>
+                <div class="work-tags"><span class="work-tag">Corporate</span><span class="work-tag">Identity</span><span class="work-tag">Print</span></div>
+              </div>
+            </article>
+
+            <article class="work-item" style="--d:0.30s" data-num="06" data-title="Presidential Stationery" data-tags="Corporate,Identity,Print,Stationery" data-count="3" data-caption="DRAFTの代表が私信に使うレターセットのデザインを担当。銅箔のサインと活版印刷の住所が、送り手の誠実さと品格を体現する。" data-images="link/letter/letter_02.jpg|link/letter/letter_03.jpg|link/letter/letter_01.jpg">
               <div class="work-thumb">
                 <picture><source srcset="link/letter/letter_01_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/letter/letter_01_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/letter/letter_01.jpg" alt="Presidential Stationery" style="width:100%;height:100%;object-fit:cover;"></picture>
                 <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
               </div>
               <div class="work-meta">
-                <p class="work-num">05</p>
+                <p class="work-num">06</p>
                 <p class="work-title">Presidential Stationery</p>
-                <div class="work-tags"><span class="work-tag">Identity</span><span class="work-tag">Print</span><span class="work-tag">Stationery</span></div>
+                <div class="work-tags"><span class="work-tag">Corporate</span><span class="work-tag">Identity</span><span class="work-tag">Print</span><span class="work-tag">Stationery</span></div>
               </div>
             </article>
 
-            <article class="work-item" style="--d:0.30s" data-num="06" data-title="QUO Card — Shareholder's Gift" data-tags="Identity,Illustration,Print" data-count="3" data-caption="株主優待品のQUOカードと同封レターをデザイン。オリジナルイラストでブランドへの愛着を表現し、株主から「来年も持ち続けたい」と好評を博し、翌年度以降もシリーズとして継続された。" data-images="link/SH/sh_01.jpg|link/SH/sh_02.jpg|link/SH/sh_03.jpg">
+            <article class="work-item" style="--d:0.36s" data-num="07" data-title="QUO Card — Shareholder's Gift" data-tags="Corporate,Identity,Illustration,Print" data-count="3" data-caption="株主優待品のQUOカードと同封レターをデザイン。オリジナルイラストでブランドへの愛着を表現し、株主から「来年も持ち続けたい」と好評を博し、翌年度以降もシリーズとして継続された。" data-images="link/SH/sh_01.jpg|link/SH/sh_02.jpg|link/SH/sh_03.jpg">
               <div class="work-thumb">
                 <picture><source srcset="link/SH/sh_03_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/SH/sh_03_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/SH/sh_03.jpg" alt="QUO Card — Shareholder's Gift" style="width:100%;height:100%;object-fit:cover;"></picture>
                 <div class="work-thumb-overlay"><span class="work-hover-label">view →</span></div>
               </div>
               <div class="work-meta">
-                <p class="work-num">06</p>
+                <p class="work-num">07</p>
                 <p class="work-title">QUO Card — Shareholder's Gift</p>
-                <div class="work-tags"><span class="work-tag">Identity</span><span class="work-tag">Illustration</span><span class="work-tag">Print</span></div>
+                <div class="work-tags"><span class="work-tag">Corporate</span><span class="work-tag">Identity</span><span class="work-tag">Illustration</span><span class="work-tag">Print</span></div>
               </div>
             </article>
 
@@ -847,7 +859,7 @@
         <div id="photo-works">
           <div class="gallery-grid">
 
-            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="Yokohama Timber Wharf" data-cat="Photography" data-tags="Architecture,Corporate,Space" data-count="7" data-caption="横浜・みなとみらいに位置する商業複合施設の竣工撮影を担当。木材をふんだんに用いた空間の、光と素材が織りなす豊かな表情を記録した。<br><a href='https://yokohama-timberwharf.com' target='_blank' rel='noopener'>yokohama-timberwharf.com →</a>" data-images="link/YTW/YTW_01.jpg|link/YTW/YTW_02.jpg|link/YTW/YTW_03.jpg|link/YTW/YTW_04.jpg|link/YTW/YTW_05.jpg|link/YTW/YTW_06.jpg|link/YTW/YTW_07.jpg">
+            <article class="gallery-item" style="--d:0.00s" data-num="01" data-title="Yokohama Timber Wharf" data-cat="Photography" data-tags="Architecture,Corporate,Space" data-count="7" data-caption="横浜・みなとみらいに位置する商業複合施設の竣工撮影を担当。木材をふんだんに用いた空間の光と素材が織りなす豊かな表情を記録。『近代建築』2026年1月号等、各種媒体に掲載。<br><a href='https://yokohama-timberwharf.com' target='_blank' rel='noopener'>yokohama-timberwharf.com →</a>" data-images="link/YTW/YTW_01.jpg|link/YTW/YTW_02.jpg|link/YTW/YTW_03.jpg|link/YTW/YTW_04.jpg|link/YTW/YTW_05.jpg|link/YTW/YTW_06.jpg|link/YTW/YTW_07.jpg">
               <div class="gallery-thumb"><picture><source srcset="link/YTW/YTW_01_800.webp" media="(max-width:768px)" type="image/webp"><source srcset="link/YTW/YTW_01_2000.webp" type="image/webp"><img width="2000" height="1333" loading="lazy" src="link/YTW/YTW_01.jpg" alt="Yokohama Timber Wharf" style="width:100%;height:100%;object-fit:cover;"></picture><div class="gallery-hover-overlay"><span class="gallery-hover-label">view →</span></div></div>
               <div class="gallery-meta"><p class="gallery-num">01</p><p class="gallery-title">Yokohama Timber Wharf</p><div class="gallery-tags"><span class="gallery-tag">Architecture</span><span class="gallery-tag">Corporate</span><span class="gallery-tag">Space</span></div></div>
             </article>
