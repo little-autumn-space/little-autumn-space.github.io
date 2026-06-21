@@ -533,6 +533,7 @@
       position: relative; z-index: 1;
       width: min(880px, calc(100vw - 2rem));
       height: min(750px, 92svh);
+      max-height: 92svh;
       background: var(--bg);
       display: flex; flex-direction: column;
       transform: translateX(40px); opacity: 0;
@@ -1250,12 +1251,15 @@
         const img = new Image();
         img.alt = '';
         img.onload = () => {
+          const poPanel = poMain.closest('.photo-overlay-panel');
           if (img.naturalHeight > img.naturalWidth) {
             img.style.width = 'auto'; img.style.height = '100%';
             poMain.style.flex = '1 1 0';
+            if (poPanel) poPanel.style.height = '';
           } else {
             img.style.width = '100%'; img.style.height = 'auto';
             poMain.style.flex = `0 0 ${Math.round(poMain.offsetWidth * img.naturalHeight / img.naturalWidth)}px`;
+            if (poPanel) poPanel.style.height = isMobile() ? 'auto' : '';
           }
           poMain.innerHTML = '';
           poMain.appendChild(img);
